@@ -1,0 +1,20 @@
+---
+- name: Provide dummy certificates
+  include_tasks: dummy_cert.yaml
+  loop_control:
+    loop_var: cert_name
+  vars:
+    cert_prefix: "{{ dehydrated.prefix.certs }}/{{ cert_name }}"
+  with_items: "{{ dehydrated.domains.keys() }}"
+  when: dehydrated.provide_dummy_cert
+
+- name: Template domains file
+  template:
+    src: domains.txt
+    dest: "{{ item }}"
+  with_items:
+    - "{{ dehydrated.prefix.config }}/domains.txt"
+  notify:
+    - Reload httpd service (and dehydrated certificates) before running dehydrated
+    - Run dehydrated
+    - Reload httpd service (and dehydrated certificates) after running dehydrated

@@ -1,0 +1,26 @@
+---
+- name: Create dummy certificate directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0700
+  with_items:
+    - "{{ cert_prefix }}"
+
+- name: Copy dummy certificate
+  copy:
+    content: "{{ dehydrated.dummy_cert }}"
+    dest: "{{ item }}"
+    force: no
+    mode: 0600
+  with_items:
+    - "{{ cert_prefix }}/fullchain.pem"
+
+- name: Copy dummy key
+  copy:
+    content: "{{ dehydrated.dummy_key }}"
+    dest: "{{ item }}"
+    force: no
+    mode: 0600
+  with_items:
+    - "{{ cert_prefix }}/privkey.pem"

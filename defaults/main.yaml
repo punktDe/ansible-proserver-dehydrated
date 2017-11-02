@@ -1,0 +1,60 @@
+---
+dehydrated:
+  prefix:
+    certs: /usr/local/etc/ssl/certs
+    config: /usr/local/etc/dehydrated
+  command:
+    /usr/local/bin/dehydrated --cron --keep-going >> /var/log/dehydrated.log 2>&1
+  httpd_service:
+    name: nginx
+    state: reloaded
+  domains: {}
+  provide_dummy_cert: yes
+  dummy_cert: |
+    -----BEGIN CERTIFICATE-----
+    MIIDBzCCAe+gAwIBAgIJAMo+xiYMqrwVMA0GCSqGSIb3DQEBBQUAMBoxGDAWBgNV
+    BAMMD3d3dy5leGFtcGxlLmNvbTAeFw0xNzEwMzAxNzI3NDFaFw0yNzEwMjgxNzI3
+    NDFaMBoxGDAWBgNVBAMMD3d3dy5leGFtcGxlLmNvbTCCASIwDQYJKoZIhvcNAQEB
+    BQADggEPADCCAQoCggEBANQ7HCZaH5ydOqX+jEMkY6oRDKx78qU3eeCw0TKJpo/B
+    CF7hx0fEvFuKfwKz3nNfB1n30Mt5ZET6pdgdFViy97Ofvzb1G7ZcSRwHJuDcmg0h
+    +vWZ/dpMT13qI0mto0tX6myoFQWi4MMSm3VUXShFM0VuVa9lwcOPCfxWmHVXUJV/
+    Cu4bZ3G/WILK1tTn/H77ceHgPwjtTXyqZ9jagohFXiQwZvzwTONUEC9Scc28+JJ4
+    hp/7ppL9GhPk1sxdC7ZpZi41HtBlBwJ3LN2XufSu0p5ufwPz/8WkGfZjMribuubV
+    uARucBxORhXMV1+GZ8rgLVZODXfl+TZO3IXSjwzZH5kCAwEAAaNQME4wHQYDVR0O
+    BBYEFP5M5wjW0177s76UiElG8taApH/vMB8GA1UdIwQYMBaAFP5M5wjW0177s76U
+    iElG8taApH/vMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADggEBACn+XP0r
+    eNmCctymsDQ3xwR9HcqNxl0brX2VE0Nh5xDsuvToNJDSLctDxzHktuZLMa9VkXDY
+    Kn2U1uQyJz0zgzFffzkEt0ARxffRwMDbq9vr4dGNz9t7rLy3M4MbVb11HzbByX/L
+    ud6nqRg56ZhDgfix/iHNvIJMXfGBwGrzBdbdxGTGQ+hADIcnVl/tB9rvmhD4dvdC
+    INkcbbI81aF6WBsZEB4HOes90LyfoGFBYMNoKIYQSQhGQikkwE0Ss1LIbuFqJLKL
+    87DE0Brqhf0ZC11r9DFRSPFKse8agAwnsfRi69oUcFW244q1PQCRKWlA/7NxhdR8
+    tisUV9Kx1qWKHyo=
+    -----END CERTIFICATE-----
+  dummy_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEpAIBAAKCAQEA1DscJlofnJ06pf6MQyRjqhEMrHvypTd54LDRMommj8EIXuHH
+    R8S8W4p/ArPec18HWffQy3lkRPql2B0VWLL3s5+/NvUbtlxJHAcm4NyaDSH69Zn9
+    2kxPXeojSa2jS1fqbKgVBaLgwxKbdVRdKEUzRW5Vr2XBw48J/FaYdVdQlX8K7htn
+    cb9YgsrW1Of8fvtx4eA/CO1NfKpn2NqCiEVeJDBm/PBM41QQL1Jxzbz4kniGn/um
+    kv0aE+TWzF0LtmlmLjUe0GUHAncs3Ze59K7Snm5/A/P/xaQZ9mMyuJu65tW4BG5w
+    HE5GFcxXX4ZnyuAtVk4Nd+X5Nk7chdKPDNkfmQIDAQABAoIBAQDTX2vR5sDFQvM+
+    kB8yX/PDVefBglFQq8f/ORuhsebqFd84YLYRjKfspCuLjYlobqTrvh1+ChELgnfa
+    nly8UsLRa7EOE2DeZ1uJRrY6Dnx/x/Ai3JQv7wC9EIzEvON+Drm0LlOBoY8pukaK
+    vNNrYECITjOY1Uf+dWAEqlp9w9DGkkdB20wDf1k/D2pF/Tyzqfi1cchi6z9uFrUV
+    XlLxpLiaeqqQoQINhBwpHsFdrS9on0c6Knk2/KZMfzPi8IEjXKPlDT3vtlQ6ct4M
+    D+msGUagLpf5EsFrjCbzIJfOCfxrVMSRYp+TRboBeGLAk7zREhPUJr87MttqOHTm
+    keY6m5JhAoGBAP5zXanXBmVg5DLl4Lb/BqKJyWEFHNdSQWiWkZ4e6nf8vEewRDQQ
+    +IRkQ8wzL0QpD7Fv3jn5ZXpVBd4HaJ7SzMKeWAww2g0SMrvNIQTH8zyw7GiM2TZa
+    6p7Kx/7rr2J091sQUsOys+85hhLHm7cQQKOdTlOtvwWCrOJf6ELMX5VnAoGBANWF
+    7rpAeIPw0166QVawyH1EB7CINVvd9ANyhzxkHdTufhyOjHWDa/sQk2wKwt4mpUuw
+    4IJmnTAysOjibm6hirnVI2Aihcikp16WevPRUl6zGKGO4JLkMSwaylF038EAYCLi
+    EeFaTUIXqR5PeX6aHyBmJ7el/5R8XRwBzkKJ84L/AoGAU/zAbc8LzWqt6B74jW6g
+    QgY48k09t9Tuwhbw+cA6pGBHxWHpIUZ4wTpXJo++ikEDbQ3/zCMF29s0lJTdc48h
+    Bxw888ksMCRRmquaunlFUEMVxWy4Rbi8uK02Vm509YqmGujIaNATlGLoXkqEm2hB
+    7b9+myA+bRM0/YOqpmHPKwECgYEAhJLS5buv2CQH6RH2DZBX+0bpC1eW4cJOhnFu
+    vDVhPFsT3EE5vqDpw4nILtYDphESootg6jYyNMHUi9RDQtd0HevTOhZVQH3TGWyP
+    TKFT5k6G5ZCjqTCbw0mjAq5xWxETn7UD6wq5W2b7b0FjKxMgbmpfEKy1ookQ+pm4
+    aiHjGxsCgYA17Xs44S2dniBRJaiq3ONM2SN8j15AkvoxDOUjLdt6gKau1+byAcVO
+    VoEPfKWYXrA26JrWcViPjcXffcFn46NPRsPaatAG8xEgAAC+dFhEXDLdh/WGSNTq
+    XWHu2CjeDqfUQpD6cuSj2qOuu+q9FUTJBkTACw8bAqQtozj5L/jeug==
+    -----END RSA PRIVATE KEY-----

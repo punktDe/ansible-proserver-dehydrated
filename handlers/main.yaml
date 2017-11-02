@@ -1,0 +1,17 @@
+---
+- name: Reload httpd service (and dehydrated certificates) before running dehydrated
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items:
+    - "{{ dehydrated.httpd_service }}"
+
+- name: Run dehydrated
+  shell: "{{ dehydrated.command }}"
+
+- name: Reload httpd service (and dehydrated certificates) after running dehydrated
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items:
+    - "{{ dehydrated.httpd_service }}"
