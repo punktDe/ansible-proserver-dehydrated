@@ -1,0 +1,14 @@
+---
+- name: Set ACME CA URL in dehydrated configuration
+  lineinfile:
+    path: "{{ config_filepath }}"
+    regexp: "^CA="
+    line: >
+      CA="{{ ca }}"
+  loop_control:
+    label: "{{ config_filepath }} CA={{ ca }}"
+  with_items:
+    - "{{ config_filepath }}"
+  vars:
+    config_filepath: "{{ dehydrated.prefix.config }}/config"
+    ca: "{{ dehydrated.ca }}"

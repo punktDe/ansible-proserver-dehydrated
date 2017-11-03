@@ -3,8 +3,9 @@ dehydrated:
   prefix:
     certs: /usr/local/etc/ssl/certs
     config: /usr/local/etc/dehydrated
-  command:
-    /usr/local/bin/dehydrated --cron --keep-going >> /var/log/dehydrated.log 2>&1
+  ca: https://acme-staging.api.letsencrypt.org/directory
+  command: >
+    /usr/local/bin/dehydrated --cron --keep-going --accept-terms >> /var/log/dehydrated.log 2>&1
   httpd_service:
     name: nginx
     state: reloaded

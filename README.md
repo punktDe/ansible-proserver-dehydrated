@@ -43,3 +43,13 @@ dehydrated:
 ```
 
 The certificate will be saved to `/usr/local/etc/ssl/certs/{{ domain_name }}/`.
+
+**4)** By default Let's Encrypt's staging CA is being used.
+If everything works, configure the production CA,
+delete `/usr/local/etc/ssl/certs/*`, and rerun Ansible.
+
+```yaml
+---
+dehydrated:
+  ca: https://acme-v01.api.letsencrypt.org/directory
+```
