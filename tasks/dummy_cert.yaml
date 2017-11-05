@@ -7,20 +7,20 @@
   with_items:
     - "{{ cert_prefix }}"
 
-- name: Copy dummy certificate
+- name: Copy dummy certificate and key
   copy:
-    content: "{{ dehydrated.dummy_cert }}"
-    dest: "{{ item }}"
+    content: "{{ item.content }}"
+    dest: "{{ item.dest }}"
     force: no
     mode: 0600
+  loop_control:
+    label: "{{ item.dest }}"
   with_items:
-    - "{{ cert_prefix }}/fullchain.pem"
-
-- name: Copy dummy key
-  copy:
-    content: "{{ dehydrated.dummy_key }}"
-    dest: "{{ item }}"
-    force: no
-    mode: 0600
-  with_items:
-    - "{{ cert_prefix }}/privkey.pem"
+    - dest: "{{ cert_prefix }}/fullchain.pem"
+      content: "{{ dehydrated.dummy_cert }}"
+    - dest: "{{ cert_prefix }}/privkey.pem"
+      content: "{{ dehydrated.dummy_key }}"
+  notify:
+    - Reload httpd service (and dehydrated certificates) before running dehydrated
+    - Run dehydrated
+    - Reload httpd service (and dehydrated certificates) after running dehydrated
