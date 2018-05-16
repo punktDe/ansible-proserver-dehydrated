@@ -5,7 +5,7 @@
     loop_var: cert_name
   vars:
     cert_prefix: "{{ dehydrated.prefix.certs }}/{{ cert_name }}"
-  with_items: "{{ dehydrated.domains.keys() }}"
+  with_items: "{{ dehydrated.domains.keys()|list }}"
   when: dehydrated.provide_dummy_cert
 
 - name: Template domains file
