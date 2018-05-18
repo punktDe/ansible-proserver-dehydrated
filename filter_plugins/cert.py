@@ -2,6 +2,9 @@ import os
 
 
 def cert_name(dehydrated, domain):
+    if 'domains' not in dehydrated.keys():
+        return None
+
     if domain in dehydrated['domains'].keys():
         return domain
 
