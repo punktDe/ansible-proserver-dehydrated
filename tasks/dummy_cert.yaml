@@ -18,6 +18,8 @@
   with_items:
     - dest: "{{ cert_prefix }}/fullchain.pem"
       content: "{{ dehydrated.dummy_cert }}"
+    - dest: "{{ cert_prefix }}/chain.pem"
+      content: "{{ dehydrated.dummy_cert }}"
     - dest: "{{ cert_prefix }}/privkey.pem"
       content: "{{ dehydrated.dummy_key }}"
   notify:
