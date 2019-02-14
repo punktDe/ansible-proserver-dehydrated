@@ -10,6 +10,7 @@ dehydrated:
     name: nginx
     state: reloaded
   domains: {}
+  do_not_renew: []
   provide_dummy_cert: yes
   dummy_cert: |
     -----BEGIN CERTIFICATE-----
