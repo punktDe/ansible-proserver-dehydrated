@@ -1,0 +1,18 @@
+---
+- name: Create directory for acme-dns configuration
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0700
+  with_items:
+    - "{{ dehydrated.prefix.config }}/acme-dns"
+
+- name: Template acme-dns configuration
+  copy:
+    content: "{{ item.value }}"
+    dest: "{{ dest }}"
+  loop_control:
+    label: "{{ dest }}"
+  vars:
+    dest: "{{ dehydrated.prefix.config }}/acme-dns/{{ item.key }}.json"
+  with_dict: "{{ dehydrated.acme_dns }}"

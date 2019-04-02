@@ -5,6 +5,7 @@ dehydrated:
     config: /usr/local/etc/dehydrated
   config:
     CA: https://acme-v02.api.letsencrypt.org/directory
+  acme_dns: {}
   command: >
     /usr/local/bin/dehydrated --cron --keep-going --accept-terms >> /var/log/dehydrated.log 2>&1
   httpd_service:

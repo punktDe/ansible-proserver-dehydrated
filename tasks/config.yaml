@@ -10,3 +10,10 @@
   with_dict: "{{ dehydrated.config }}"
   vars:
     config_filepath: "{{ dehydrated.prefix.config }}/config"
+
+- name: Template dehydrated hook
+  template:
+    src: hook.sh
+    dest: "{{ item }}"
+  with_items:
+    - "{{ dehydrated.prefix.config }}/hook.sh"
