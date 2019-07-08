@@ -5,12 +5,13 @@ def cert_name(dehydrated, domain):
     if 'domains' not in dehydrated.keys():
         return None
 
-    if domain in dehydrated['domains'].keys():
-        return domain
-
     for crt_name, crt_domains in dehydrated['domains'].items():
-        if domain in crt_domains:
+        if domain == crt_name or domain in crt_domains:
             return crt_name
+
+        for crt_domain in [crt_name] + crt_domains:
+            if crt_domain.startswith('*.') and crt_domain[2:] == domain[domain.find('.') + 1:]:
+                return crt_name
 
     return None
 
@@ -57,6 +58,20 @@ def cert_name_test():
         'baz.com': ['baz.net', 'baz.org', 'baz.info'],
     }}, 'baz.com')
     print(result, result == 'baz.com')
+
+    result = cert_name({'domains': {
+        '*.*.example.com': ['example.com'],
+        '*.example.com': ['example.com'],
+        'example.net': ['*.example.net'],
+    }}, 'test.example.com')
+    print(result, result == '*.example.com')
+
+    result = cert_name({'domains': {
+        '*.*.example.com': ['example.com'],
+        '*.example.net': ['example.net'],
+        'example.com': ['*.example.com'],
+    }}, 'test.example.com')
+    print(result, result == 'example.com')
 
 
 def cert_exists_test():
