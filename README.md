@@ -20,7 +20,7 @@ git submodule add https://github.com/punktDe/proserver-ansible-dehydrated.git ro
 ```yaml
 ---
 dependencies:
-  - { role: dehydrated }
+  - role: dehydrated
 ```
 
 **2)** You can find a list of variables and their default values in `defaults/main.yaml`.
