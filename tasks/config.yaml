@@ -15,5 +15,6 @@
   template:
     src: hook.sh
     dest: "{{ item }}"
+    mode: "+x"
   with_items:
     - "{{ dehydrated.prefix.config }}/hook.sh"
