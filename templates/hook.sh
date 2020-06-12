@@ -24,6 +24,9 @@ clean_challenge() {
 deploy_cert() {
     local DOMAIN="${1}" KEYFILE="${2}" CERTFILE="${3}" FULLCHAINFILE="${4}" CHAINFILE="${5}" TIMESTAMP="${6}"
 
+    {% if ansible_system == 'Linux' %}
+    systemctl {{ dehydrated.httpd_service.state|regex_replace('^(reload|restart)ed$', '\\1')|quote }} {{ dehydrated.httpd_service.name|quote }}
+    {% else %}
     if fgrep apache24_enable /etc/rc.conf | fgrep -i yes; then
         echo " + Hook: Restarting Apache..."
         /usr/local/etc/rc.d/apache24 graceful
@@ -33,6 +36,7 @@ deploy_cert() {
     else
         echo " + Neither Nginx nor Apache is enabled, thus no webserver is restarted. :)"
     fi
+    {% endif %}
 }
 
 unchanged_cert() {

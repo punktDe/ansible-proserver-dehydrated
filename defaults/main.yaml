@@ -1,13 +1,15 @@
 ---
 dehydrated:
   prefix:
-    certs: /usr/local/etc/ssl/certs
-    config: /usr/local/etc/dehydrated
+    certs: "{{ '/var/lib/dehydrated/certs' if ansible_system == 'Linux' else '/usr/local/etc/ssl/certs' }}"
+    config: "{{ '/etc/dehydrated' if ansible_system == 'Linux' else '/usr/local/etc/dehydrated' }}"
   config:
     CA: https://acme-v02.api.letsencrypt.org/directory
+    WELLKNOWN: "{{ '/var/lib/dehydrated/acme-challenges' if ansible_system == 'Linux' else '/var/www/letsencrypt' }}"
+    HOOK: "{{ '/etc/dehydrated/hook.sh' if ansible_system == 'Linux' else '/usr/local/etc/dehydrated/hook.sh' }}"
   acme_dns: {}
   command: >
-    /usr/local/bin/dehydrated --cron --keep-going --accept-terms >> /var/log/dehydrated.log 2>&1
+    /usr{{ '' if ansible_system == 'Linux' else '/local' }}/bin/dehydrated --cron --keep-going --accept-terms >> /var/log/dehydrated.log 2>&1
   httpd_service:
     name: nginx
     state: reloaded

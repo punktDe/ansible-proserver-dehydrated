@@ -1,4 +1,5 @@
 ---
+- import_tasks: install.yaml
 - import_tasks: config.yaml
 - import_tasks: domains.yaml
 - import_tasks: acme-dns.yaml
