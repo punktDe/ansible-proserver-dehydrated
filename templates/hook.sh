@@ -9,7 +9,8 @@ deploy_challenge() {
         local subdomain="$(jq -r '.subdomain' {{ dehydrated.prefix.config|quote }}/acme-dns/${DOMAIN}.json)"
         local acme_dns="$(jq -r '.fulldomain|split(".")[1:]|join(".")' {{ dehydrated.prefix.config|quote }}/acme-dns/${DOMAIN}.json)"
 
-        curl -X POST \
+        curl -s -S \
+            -X POST \
             -H "X-Api-User: ${username}" \
             -H "X-Api-Key: ${password}" \
             -d '{"subdomain": "'"${subdomain}"'", "txt": "'"$3"'"}' \

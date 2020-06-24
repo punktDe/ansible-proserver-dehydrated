@@ -1,4 +1,25 @@
-- name: Install dehydrated
-  when: ansible_distribution == 'Ubuntu'
-  apt:
-    name: dehydrated
+- when: ansible_distribution == 'Ubuntu'
+  block:
+    - name: Install dehydrated
+      apt:
+        name:
+          - jq
+          - dehydrated
+
+    - name: Install dehydrated systemd units
+      vars:
+        dest: "/etc/systemd/system/{{ item }}"
+      loop:
+        - dehydrated.service
+        - dehydrated.timer
+      template:
+        src: "systemd/{{ item }}"
+        dest: "{{ dest }}"
+
+    - name: Enable dehydrated systemd timer
+      loop:
+        - dehydrated.timer
+      systemd:
+        daemon_reload: yes
+        name: "{{ item }}"
+        enabled: yes

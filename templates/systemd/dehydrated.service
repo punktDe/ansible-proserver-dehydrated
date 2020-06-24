@@ -1,0 +1,2 @@
+[Service]
+ExecStart=dehydrated --accept-terms --cron
