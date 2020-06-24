@@ -1,18 +1,36 @@
 ---
 dehydrated:
   prefix:
-    certs: "{{ '/var/lib/dehydrated/certs' if ansible_system == 'Linux' else '/usr/local/etc/ssl/certs' }}"
-    config: "{{ '/etc/dehydrated' if ansible_system == 'Linux' else '/usr/local/etc/dehydrated' }}"
+    certs: >-
+      {%- if ansible_system == 'Linux' -%}
+        /var/lib/dehydrated/certs
+      {%- else -%}
+        /usr/local/etc/ssl/certs
+      {%- endif -%}
+    config: >-
+      {%- if ansible_system == 'Linux' -%}
+        /etc/dehydrated
+      {%- else -%}
+        /usr/local/etc/dehydrated
+      {%- endif -%}
   config:
     CA: https://acme-v02.api.letsencrypt.org/directory
     WELLKNOWN: "{{ '/var/lib/dehydrated/acme-challenges' if ansible_system == 'Linux' else '/var/www/letsencrypt' }}"
     HOOK: "{{ '/etc/dehydrated/hook.sh' if ansible_system == 'Linux' else '/usr/local/etc/dehydrated/hook.sh' }}"
   acme_dns: {}
-  command: >
-    /usr{{ '' if ansible_system == 'Linux' else '/local' }}/bin/dehydrated --cron --keep-going --accept-terms >> /var/log/dehydrated.log 2>&1
+  command: >-
+    {%- if ansible_system == 'Linux' -%}
+      systemctl start dehydrated
+    {%- else -%}
+      /usr/local/bin/dehydrated --cron --keep-going --accept-terms >> /var/log/dehydrated.log 2>&1
+    {%- endif -%}
   httpd_service:
     name: nginx
     state: reloaded
+  systemd:
+    timer: |
+      OnCalendar=*-*-* 01:00:00
+      RandomizedDelaySec=6h
   domains: {}
   do_not_renew: []
   provide_dummy_cert: yes

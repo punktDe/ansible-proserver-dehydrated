@@ -1,0 +1,6 @@
+[Timer]
+{{ dehydrated.systemd.timer -}}
+Persistent=true
+
+[Install]
+WantedBy=timers.target
