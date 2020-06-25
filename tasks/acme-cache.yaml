@@ -1,0 +1,17 @@
+- name: Create directory for acme-cache configuration
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0700
+  with_items:
+    - "{{ dehydrated.prefix.config }}/acme-cache"
+
+- name: Template acme-cache configuration
+  copy:
+    content: "{{ item.value }}"
+    dest: "{{ dest }}"
+  loop_control:
+    label: "{{ dest }}"
+  vars:
+    dest: "{{ dehydrated.prefix.config }}/acme-cache/{{ item.key }}.json"
+  loop: "{{ dehydrated.acme_cache|dict2items }}"
