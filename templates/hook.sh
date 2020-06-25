@@ -52,14 +52,15 @@ startup_hook() {
     for config_file in {{ dehydrated.prefix.config|quote }}/acme-cache/*.json; do
         local cert="$config_file"; cert="${cert##*/}"; cert="${cert%.json}"
 
-        local protocol="$(jq -r .protocol "$config_file")"
+        local protocol="$(jq -r '.protocol // "sftp"' "$config_file")"
         if [[ "$protocol" != "sftp" ]]; then
             continue
         fi
 
         local host="$(jq -r .host "$config_file")"
-        local user="$(jq -r .user "$config_file")"
-        local path="$(jq -r .path "$config_file")"
+        local user="$(jq -r ".user // \"${cert}\"" "$config_file")"
+        local path="$(jq -r ".path // empty" "$config_file")"
+        local port="$(jq -r ".port // 22" "$config_file")"
 
         local public_key="$(jq -r .public_key "$config_file")"
         local public_key_file="$(mktemp)"
@@ -83,7 +84,7 @@ startup_hook() {
             local file_basename="$(basename -- "${!file_var}")"
             sftp -q \
                 -o GlobalKnownHostsFile=/dev/null -o UserKnownHostsFile="$public_key_file" -i "$private_key_file" \
-                "${user}@${host}:${path}${file_basename}" "${!file_var}.cache"
+                -P "$port" "${user}@${host}:${path}${file_basename}" "${!file_var}.cache"
         done
         umask "$umask"
 
