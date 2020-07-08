@@ -64,7 +64,7 @@ startup_hook() {
 
         local public_key="$(jq -r .public_key "$config_file")"
         local public_key_file="$(mktemp)"
-        cat <<< "$public_key" > "$public_key_file"
+        cat <<< "$host $public_key" > "$public_key_file"
 
         local private_key="$(jq -r .private_key "$config_file")"
         local private_key_file="$(mktemp)"
