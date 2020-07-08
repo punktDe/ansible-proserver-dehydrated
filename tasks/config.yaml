@@ -4,7 +4,7 @@
     path: "{{ config_filepath }}"
     regexp: "^{{ item.key|regex_escape }}="
     line: >
-      {{ item.key|quote }}={{ item.value|quote }}
+      {{ item.key }}={{ item.value|quote }}
   loop_control:
     label: "{{ config_filepath }} {{ item.key }}={{ item.value }}"
   with_dict: "{{ dehydrated.config }}"
