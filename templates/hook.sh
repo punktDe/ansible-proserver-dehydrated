@@ -61,6 +61,8 @@ startup_hook() {
         local user="$(jq -r ".user // \"${cert}\"" "$config_file")"
         local path="$(jq -r ".path // empty" "$config_file")"
         local port="$(jq -r ".port // 22" "$config_file")"
+        local opts
+        IFS=$'\n' read -r -d '' -a opts < <(jq -r "(.opts // [])[]" "$config_file" && printf '\0')
 
         local public_key="$(jq -r .public_key "$config_file")"
         local public_key_file="$(mktemp)"
@@ -82,7 +84,7 @@ startup_hook() {
         umask 0177
         for file_var in cert_file chain_file fullchain_file privkey_file; do
             local file_basename="$(basename -- "${!file_var}")"
-            sftp -q \
+            sftp -q "${opts[@]}" \
                 -o GlobalKnownHostsFile=/dev/null -o UserKnownHostsFile="$public_key_file" -i "$private_key_file" \
                 -P "$port" "${user}@${host}:${path}${file_basename}" "${!file_var}.cache"
         done
