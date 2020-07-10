@@ -18,3 +18,24 @@
     mode: "+x"
   with_items:
     - "{{ dehydrated.prefix.config }}/hook.sh"
+
+- name: Create directories for custom dehydrated hooks
+  vars:
+    dehydrated_hook_dir: "{{ dehydrated.prefix.config }}/hooks/{{ item }}.d"
+  loop: "{{ dehydrated.hooks.keys()|list }}"
+  loop_control:
+    label: "{{ dehydrated_hook_dir }}"
+  file:
+    path: "{{ dehydrated_hook_dir }}"
+    state: directory
+
+- name: Template custom dehydrated hooks
+  vars:
+    dehydrated_hook_file: "{{ dehydrated.prefix.config }}/hooks/{{ item.hook }}.d/{{ item.name }}"
+  loop: "{{ dehydrated.hooks|dehydrated_flatten_hooks }}"
+  loop_control:
+    label: "{{ dehydrated_hook_file }}"
+  copy:
+    content: "{{ item.script }}"
+    dest: "{{ dehydrated_hook_file }}"
+    mode: a+x

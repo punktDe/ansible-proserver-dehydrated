@@ -28,6 +28,18 @@ dehydrated:
   httpd_service:
     name: nginx
     state: reloaded
+  hooks:
+    deploy_challenge: {}
+    clean_challenge: {}
+    sync_cert: {}
+    deploy_cert: {}
+    deploy_ocsp: {}
+    unchanged_cert: {}
+    invalid_challenge: {}
+    request_failure: {}
+    generate_csr: {}
+    startup: {}
+    exit: {}
   systemd:
     timer: |
       OnCalendar=*-*-* 01:00:00

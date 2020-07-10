@@ -18,6 +18,26 @@ deploy_challenge() {
             -d '{"subdomain": "'"${subdomain}"'", "txt": "'"$3"'"}' \
             "https://${acme_dns}/update"
     fi
+
+    for hook in {{ dehydrated.prefix.config|quote }}/hooks/deploy_challenge.d/*; do
+        DOMAIN="$DOMAIN" TOKEN_FILENAME="$TOKEN_FILENAME" TOKEN_VALUE="$TOKEN_VALUE" "$hook" "$DOMAIN" "$TOKEN_FILENAME" "$TOKEN_VALUE" || :
+    done
+}
+
+clean_challenge() {
+    local DOMAIN="${1}" TOKEN_FILENAME="${2}" TOKEN_VALUE="${3}"
+
+    for hook in {{ dehydrated.prefix.config|quote }}/hooks/clean_challenge.d/*; do
+        DOMAIN="$DOMAIN" TOKEN_FILENAME="$TOKEN_FILENAME" TOKEN_VALUE="$TOKEN_VALUE" "$hook" "$DOMAIN" "$TOKEN_FILENAME" "$TOKEN_VALUE" || :
+    done
+}
+
+sync_cert() {
+    local KEYFILE="${1}" CERTFILE="${2}" FULLCHAINFILE="${3}" CHAINFILE="${4}" REQUESTFILE="${5}"
+
+    for hook in {{ dehydrated.prefix.config|quote }}/hooks/sync_cert.d/*; do
+        KEYFILE="$KEYFILE" CERTFILE="$CERTFILE" FULLCHAINFILE="$FULLCHAINFILE" CHAINFILE="$CHAINFILE" REQUESTFILE="$REQUESTFILE" "$hook" "$KEYFILE" "$CERTFILE" "$FULLCHAINFILE" "$CHAINFILE" "$REQUESTFILE" || :
+    done
 }
 
 deploy_cert() {
@@ -36,6 +56,50 @@ deploy_cert() {
         echo " + Neither Nginx nor Apache is enabled, thus no webserver is restarted. :)"
     fi
     {% endif %}
+
+    for hook in {{ dehydrated.prefix.config|quote }}/hooks/deploy_cert.d/*; do
+        DOMAIN="$DOMAIN" KEYFILE="$KEYFILE" CERTFILE="$CERTFILE" FULLCHAINFILE="$FULLCHAINFILE" CHAINFILE="$CHAINFILE" TIMESTAMP="$TIMESTAMP" "$hook" "$DOMAIN" "$KEYFILE" "$CERTFILE" "$FULLCHAINFILE" "$CHAINFILE" "$TIMESTAMP" || :
+    done
+}
+
+deploy_ocsp() {
+    local DOMAIN="${1}" OCSPFILE="${2}" TIMESTAMP="${3}"
+
+    for hook in {{ dehydrated.prefix.config|quote }}/hooks/deploy_ocsp.d/*; do
+        DOMAIN="$DOMAIN" OCSPFILE="$OCSPFILE" TIMESTAMP="$TIMESTAMP" "$hook" "$DOMAIN" "$OCSPFILE" "$TIMESTAMP" || :
+    done
+}
+
+unchanged_cert() {
+    local DOMAIN="${1}" KEYFILE="${2}" CERTFILE="${3}" FULLCHAINFILE="${4}" CHAINFILE="${5}"
+
+    for hook in {{ dehydrated.prefix.config|quote }}/hooks/unchanged_cert.d/*; do
+        DOMAIN="$DOMAIN" KEYFILE="$KEYFILE" CERTFILE="$CERTFILE" FULLCHAINFILE="$FULLCHAINFILE" CHAINFILE="$CHAINFILE" "$hook" "$DOMAIN" "$KEYFILE" "$CERTFILE" "$FULLCHAINFILE" "$CHAINFILE" || :
+    done
+}
+
+invalid_challenge() {
+    local DOMAIN="${1}" RESPONSE="${2}"
+
+    for hook in {{ dehydrated.prefix.config|quote }}/hooks/invalid_challenge.d/*; do
+        DOMAIN="$DOMAIN" RESPONSE="$RESPONSE" "$hook" "$DOMAIN" "$RESPONSE" || :
+    done
+}
+
+request_failure() {
+    local STATUSCODE="${1}" REASON="${2}" REQTYPE="${3}" HEADERS="${4}"
+
+    for hook in {{ dehydrated.prefix.config|quote }}/hooks/request_failure.d/*; do
+        STATUSCODE="$STATUSCODE" REASON="$REASON" REQTYPE="$REQTYPE" HEADERS="$HEADERS" "$hook" "$STATUSCODE" "$REASON" "$REQTYPE" "$HEADERS" || :
+    done
+}
+
+generate_csr() {
+    local DOMAIN="${1}" CERTDIR="${2}" ALTNAMES="${3}"
+
+    for hook in {{ dehydrated.prefix.config|quote }}/hooks/generate_csr.d/*; do
+        DOMAIN="$DOMAIN" CERTDIR="$CERTDIR" ALTNAMES="$ALTNAMES" "$hook" "$DOMAIN" "$CERTDIR" "$ALTNAMES" || :
+    done
 }
 
 _get_cert_enddate() {
@@ -104,9 +168,22 @@ startup_hook() {
             done
         fi
     done
+
+    # custom hooks
+    for hook in {{ dehydrated.prefix.config|quote }}/hooks/startup.d/*; do
+        "$hook" || :
+    done
+}
+
+exit_hook() {
+  local ERROR="${1:-}"
+
+    for hook in {{ dehydrated.prefix.config|quote }}/hooks/exit.d/*; do
+        "$hook" || :
+    done
 }
 
 HANDLER="$1"; shift
-if [[ "${HANDLER}" =~ ^(deploy_challenge|deploy_cert|startup_hook)$ ]]; then
+if [[ "${HANDLER}" =~ ^(deploy_challenge|clean_challenge|sync_cert|deploy_cert|deploy_ocsp|unchanged_cert|invalid_challenge|request_failure|generate_csr|startup_hook|exit_hook)$ ]]; then
   "$HANDLER" "$@"
 fi
