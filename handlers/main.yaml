@@ -5,7 +5,7 @@
     state: "{{ item.state }}"
   with_items:
     - "{{ dehydrated.httpd_service }}"
-  when: dehydrated.domains
+  when: dehydrated.domains and dehydrated.httpd_service.name
 
 - name: Run dehydrated
   shell: "{{ dehydrated.command }}"
@@ -17,4 +17,4 @@
     state: "{{ item.state }}"
   with_items:
     - "{{ dehydrated.httpd_service }}"
-  when: dehydrated.domains
+  when: dehydrated.domains and dehydrated.httpd_service.name

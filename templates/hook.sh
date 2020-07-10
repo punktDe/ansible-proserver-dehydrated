@@ -43,18 +43,12 @@ sync_cert() {
 deploy_cert() {
     local DOMAIN="${1}" KEYFILE="${2}" CERTFILE="${3}" FULLCHAINFILE="${4}" CHAINFILE="${5}" TIMESTAMP="${6}"
 
+    {% if dehydrated.httpd_service.name %}
     {% if ansible_system == 'Linux' %}
     systemctl {{ dehydrated.httpd_service.state|regex_replace('^(reload|restart)ed$', '\\1')|quote }} {{ dehydrated.httpd_service.name|quote }}
     {% else %}
-    if fgrep apache24_enable /etc/rc.conf | fgrep -i yes; then
-        echo " + Hook: Restarting Apache..."
-        /usr/local/etc/rc.d/apache24 graceful
-    elif fgrep nginx_enable /etc/rc.conf | fgrep -i yes; then
-        echo " + Hook: Restarting Nginx..."
-        /usr/local/etc/rc.d/nginx reload
-    else
-        echo " + Neither Nginx nor Apache is enabled, thus no webserver is restarted. :)"
-    fi
+    /usr/sbin/service {{ dehydrated.httpd_service.name|quote }} {{ dehydrated.httpd_service.state|regex_replace('^(reload|restart)ed$', '\\1')|quote }}
+    {% endif %}
     {% endif %}
 
     for hook in {{ dehydrated.prefix.config|quote }}/hooks/deploy_cert.d/*; do
