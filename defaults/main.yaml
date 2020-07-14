@@ -1,6 +1,12 @@
 ---
 dehydrated:
   prefix:
+    bin: >-
+      {%- if ansible_system == 'Linux' -%}
+        /usr/bin
+      {%- else -%}
+        /usr/local/bin
+      {%- endif -%}
     certs: >-
       {%- if ansible_system == 'Linux' -%}
         /var/lib/dehydrated/certs

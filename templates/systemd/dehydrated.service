@@ -1,2 +1,2 @@
 [Service]
-ExecStart=dehydrated --accept-terms --cron
+ExecStart={{ dehydrated.prefix.bin }}/dehydrated --accept-terms --cron
