@@ -43,6 +43,9 @@ sync_cert() {
 deploy_cert() {
     local DOMAIN="${1}" KEYFILE="${2}" CERTFILE="${3}" FULLCHAINFILE="${4}" CHAINFILE="${5}" TIMESTAMP="${6}"
 
+    FULLCHAINANDPRIVKEYFILE="$(dirname -- "$KEYFILE")/fullchainandprivkey.pem"
+    cat -- "$FULLCHAINFILE" "$KEYFILE" > "$FULLCHAINANDPRIVKEYFILE"
+
     {% if dehydrated.httpd_service.name %}
     {% if ansible_system == 'Linux' %}
     systemctl {{ dehydrated.httpd_service.state|regex_replace('^(reload|restart)ed$', '\\1')|quote }} {{ dehydrated.httpd_service.name|quote }}

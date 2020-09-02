@@ -43,6 +43,10 @@ class Cert:
         return Cert.file(dehydrated, domain, 'fullchain.pem')
 
     @staticmethod
+    def fullchainandprivkey(dehydrated, domain):
+        return Cert.file(dehydrated, domain, 'fullchainandprivkey.pem')
+
+    @staticmethod
     def privkey(dehydrated, domain):
         return Cert.file(dehydrated, domain, 'privkey.pem')
 
@@ -107,6 +111,7 @@ class FilterModule(object):
             'cert_cert': Cert.cert,
             'cert_chain': Cert.chain,
             'cert_fullchain': Cert.fullchain,
+            'cert_fullchainandprivkey': Cert.fullchainandprivkey,
             'cert_privkey': Cert.privkey,
         }
 
