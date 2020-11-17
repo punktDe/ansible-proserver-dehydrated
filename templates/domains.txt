@@ -1,3 +1,3 @@
-{% for primary_domain, secondary_domains in dehydrated.domains.items() %}{% if primary_domain not in dehydrated.do_not_renew %}
+{% for primary_domain, secondary_domains in dehydrated.domains.items() %}{% if primary_domain not in dehydrated.do_not_renew|dict2items|selectattr('value', 'eq', true)|map(attribute='key')|list %}
 {{ primary_domain }}{{ ' ' if secondary_domains else '' }}{{ ' '.join(secondary_domains) }}
 {% endif %}{% endfor %}
