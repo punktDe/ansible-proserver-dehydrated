@@ -16,10 +16,11 @@
         src: "systemd/{{ item }}"
         dest: "{{ dest }}"
 
-    - name: Enable dehydrated systemd timer
+    - name: Enable and start dehydrated systemd timer
       loop:
         - dehydrated.timer
       systemd:
         daemon_reload: yes
         name: "{{ item }}"
         enabled: yes
+        state: started
