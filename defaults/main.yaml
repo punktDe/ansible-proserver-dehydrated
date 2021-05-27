@@ -51,6 +51,7 @@ dehydrated:
       OnCalendar=*-*-* 00:00:00
       RandomizedDelaySec=6h
   domains: {}
+  disable_renewal: no
   do_not_renew: {}
   provide_dummy_cert: yes
   dummy_cert: |
