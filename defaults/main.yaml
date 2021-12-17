@@ -24,6 +24,13 @@ dehydrated:
     WELLKNOWN: "{{ '/var/lib/dehydrated/acme-challenges' if ansible_system == 'Linux' else '/var/www/letsencrypt' }}"
     HOOK: "{{ '/etc/dehydrated/hook.sh' if ansible_system == 'Linux' else '/usr/local/etc/dehydrated/hook.sh' }}"
   acme_dns: {}
+  #
+  # acme_cache:
+  #   example.domain:
+  #     host: acme-dns.punkt.de
+  #     ### NOTE: this has to be the public ssh host-key of the acme-server
+  #     public_key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH/BZM6hIrCLuFm8dR3WuaX5g3g5wdu8SOs9fh6jBc1y
+  #     ### NOTE: this has to be the user's private key, so it should be newly generated per project
   acme_cache: {}
   command: >-
     {%- if ansible_system == 'Linux' -%}
