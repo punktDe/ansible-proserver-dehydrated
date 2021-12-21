@@ -9,7 +9,7 @@
 
 - name: Run dehydrated
   shell: "{{ dehydrated.command }}"
-  when: dehydrated.domains
+  when: dehydrated.domains and not dehydrated.disable_renewal
 
 - name: Reload httpd service (and dehydrated certificates) after running dehydrated
   service:
