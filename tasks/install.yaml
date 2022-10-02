@@ -24,3 +24,13 @@
         name: "{{ item }}"
         enabled: yes
         state: started
+
+
+- when: ansible_distribution == 'FreeBSD'
+  block:
+    - name: Ensure dehydrated cronjob exists
+      cron:
+        name: Check and update certificates if necessary
+        hour: 0
+        minute: 30
+        job: "/usr/local/bin/dehydrated --cron --keep-going >> /var/log/dehydrated.log 2>&1"
