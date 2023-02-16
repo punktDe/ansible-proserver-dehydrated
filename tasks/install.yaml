@@ -1,26 +1,29 @@
-- when: ansible_distribution == 'Ubuntu'
-  block:
-    - name: Install dehydrated
-      apt:
-        name:
-          - jq
-          - dehydrated
+- name: Install epel-release
+  when: "ansible_os_family == 'RedHat'"
+  package:
+    name: epel-release
 
-    - name: Install dehydrated systemd units
-      vars:
-        dest: "/etc/systemd/system/{{ item }}"
-      loop:
-        - dehydrated.service
-        - dehydrated.timer
-      template:
-        src: "systemd/{{ item }}"
-        dest: "{{ dest }}"
+- name: Install dehydrated
+  package:
+    name:
+      - jq
+      - dehydrated
 
-    - name: Enable and start dehydrated systemd timer
-      loop:
-        - dehydrated.timer
-      systemd:
-        daemon_reload: yes
-        name: "{{ item }}"
-        enabled: yes
-        state: started
+- name: Install dehydrated systemd units
+  vars:
+    dest: "/etc/systemd/system/{{ item }}"
+  loop:
+    - dehydrated.service
+    - dehydrated.timer
+  template:
+    src: "systemd/{{ item }}"
+    dest: "{{ dest }}"
+
+- name: Enable and start dehydrated systemd timer
+  loop:
+    - dehydrated.timer
+  systemd:
+    daemon_reload: yes
+    name: "{{ item }}"
+    enabled: yes
+    state: started
