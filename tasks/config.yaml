@@ -19,6 +19,11 @@
   with_items:
     - "{{ dehydrated.prefix.config }}/hook.sh"
 
+- name: Create the WELLKNOWN directory
+  file:
+    path: "{{ dehydrated.config.WELLKNOWN }}"
+    state: directory
+
 - name: Create directories for custom dehydrated hooks
   vars:
     dehydrated_hook_dir: "{{ dehydrated.prefix.config }}/hooks/{{ item }}.d"
