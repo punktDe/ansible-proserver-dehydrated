@@ -1,18 +1,13 @@
-- name: Import distro specific variables
-  include_vars: "{{ lookup('first_found', params) }}"
-  vars:
-    params:
-      files:
-        - '{{ ansible_distribution }}.yml'
-        - '{{ ansible_os_family }}.yml'
-        - main.yml
-      paths:
-        - 'vars'
+- name: Install epel-release
+  when: "ansible_os_family == 'RedHat'"
+  package:
+    name: epel-release
 
 - name: Install dehydrated
   package:
-    name: "{{ dehydrated_dependencies }}"
-
+    name:
+      - jq
+      - dehydrated
 
 - name: Install dehydrated systemd units
   vars:
