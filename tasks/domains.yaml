@@ -1,17 +1,20 @@
 ---
 - name: Provide dummy certificates
-  include_tasks: dummy_cert.yaml
+  ansible.builtin.include_tasks: dummy_cert.yaml
   loop_control:
     loop_var: cert_name
   vars:
     cert_prefix: "{{ dehydrated.prefix.certs }}/{{ cert_name }}"
-  with_items: "{{ dehydrated.domains.keys()|list }}"
+  with_items: "{{ dehydrated.domains.keys() | list }}"
   when: dehydrated.provide_dummy_cert
 
 - name: Template domains file
-  template:
+  ansible.builtin.template:
     src: domains.txt
     dest: "{{ item }}"
+    owner: root
+    group: "{{ root_group }}"
+    mode: "0755"
   with_items:
     - "{{ dehydrated.prefix.config }}/domains.txt"
   notify:
