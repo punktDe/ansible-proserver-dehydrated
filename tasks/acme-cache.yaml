@@ -1,17 +1,22 @@
 - name: Create directory for acme-cache configuration
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    mode: 0700
+    mode: "0700"
+    owner: root
+    group: "{{ root_group }}"
   with_items:
     - "{{ dehydrated.prefix.config }}/acme-cache"
 
 - name: Template acme-cache configuration
-  copy:
+  ansible.builtin.copy:
     content: "{{ item.value }}"
     dest: "{{ dest }}"
+    mode: "0600"
+    owner: root
+    group: "{{ root_group }}"
   loop_control:
     label: "{{ dest }}"
   vars:
     dest: "{{ dehydrated.prefix.config }}/acme-cache/{{ item.key }}.json"
-  loop: "{{ dehydrated.acme_cache|dict2items }}"
+  loop: "{{ dehydrated.acme_cache | dict2items }}"

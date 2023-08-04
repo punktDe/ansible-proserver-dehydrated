@@ -1,7 +1,28 @@
 ---
-- import_tasks: install.yaml
+- name: Load OS-specific vars
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - '{{ ansible_distribution }}.yml'
+        - '{{ ansible_os_family }}.yml'
+        - main.yml
+      paths:
+        - 'vars'
+
+- name: Install dehydrated
   when: ansible_system == 'Linux'
-- import_tasks: config.yaml
-- import_tasks: domains.yaml
-- import_tasks: acme-dns.yaml
-- import_tasks: acme-cache.yaml
+  ansible.builtin.include_tasks: install.yaml
+
+- name: Configure dehydrated
+  ansible.builtin.include_tasks: config.yaml
+
+- name: Configure domain certs
+  ansible.builtin.include_tasks: domains.yaml
+
+
+- name: Configure acme-dns
+  ansible.builtin.include_tasks: acme-dns.yaml
+
+- name: Configure acme-cache
+  ansible.builtin.include_tasks: acme-cache.yaml

@@ -1,16 +1,21 @@
 ---
 - name: Create directory for acme-dns configuration
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    mode: 0700
+    mode: "0700"
+    owner: root
+    group: "{{ root_group }}"
   with_items:
     - "{{ dehydrated.prefix.config }}/acme-dns"
 
 - name: Template acme-dns configuration
-  copy:
+  ansible.builtin.copy:
     content: "{{ item.value }}"
     dest: "{{ dest }}"
+    mode: "0600"
+    owner: root
+    group: "{{ root_group }}"
   loop_control:
     label: "{{ dest }}"
   vars:

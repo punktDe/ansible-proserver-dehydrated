@@ -1,10 +1,14 @@
 - name: Install epel-release
   when: "ansible_os_family == 'RedHat'"
-  package:
+  ansible.builtin.package:
     name: epel-release
 
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
 - name: Install dehydrated
-  package:
+  ansible.builtin.package:
     name:
       - jq
       - dehydrated
@@ -15,14 +19,17 @@
   loop:
     - dehydrated.service
     - dehydrated.timer
-  template:
+  ansible.builtin.template:
     src: "systemd/{{ item }}"
     dest: "{{ dest }}"
+    mode: "0644"
+    owner: root
+    group: "{{ root_group }}"
 
 - name: Enable and start dehydrated systemd timer
   loop:
     - dehydrated.timer
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: yes
     name: "{{ item }}"
     enabled: yes

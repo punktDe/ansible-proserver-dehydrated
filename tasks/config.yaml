@@ -1,10 +1,10 @@
 ---
 - name: Update dehydrated configuration
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: "{{ config_filepath }}"
-    regexp: "^{{ item.key|regex_escape }}="
+    regexp: "^{{ item.key | regex_escape }}="
     line: >
-      {{ item.key }}={{ item.value|quote }}
+      {{ item.key }}={{ item.value | quote }}
   loop_control:
     label: "{{ config_filepath }} {{ item.key }}={{ item.value }}"
   with_dict: "{{ dehydrated.config }}"
@@ -12,7 +12,7 @@
     config_filepath: "{{ dehydrated.prefix.config }}/config"
 
 - name: Template dehydrated hook
-  template:
+  ansible.builtin.template:
     src: hook.sh
     dest: "{{ item }}"
     mode: "+x"
@@ -20,27 +20,35 @@
     - "{{ dehydrated.prefix.config }}/hook.sh"
 
 - name: Create the WELLKNOWN directory
-  file:
+  ansible.builtin.file:
     path: "{{ dehydrated.config.WELLKNOWN }}"
     state: directory
+    mode: "0755"
+    owner: "{{ webserver_user }}"
+    group: "{{ webserver_user }}"
 
 - name: Create directories for custom dehydrated hooks
   vars:
     dehydrated_hook_dir: "{{ dehydrated.prefix.config }}/hooks/{{ item }}.d"
-  loop: "{{ dehydrated.hooks.keys()|list }}"
+  loop: "{{ dehydrated.hooks.keys() | list }}"
   loop_control:
     label: "{{ dehydrated_hook_dir }}"
-  file:
+  ansible.builtin.file:
     path: "{{ dehydrated_hook_dir }}"
     state: directory
+    mode: "0755"
+    owner: root
+    group: "{{ root_group }}"
 
 - name: Template custom dehydrated hooks
   vars:
     dehydrated_hook_file: "{{ dehydrated.prefix.config }}/hooks/{{ item.hook }}.d/{{ item.name }}"
-  loop: "{{ dehydrated.hooks|dehydrated_flatten_hooks }}"
+  loop: "{{ dehydrated.hooks | dehydrated_flatten_hooks }}"
   loop_control:
     label: "{{ dehydrated_hook_file }}"
-  copy:
+  ansible.builtin.copy:
     content: "{{ item.script }}"
     dest: "{{ dehydrated_hook_file }}"
     mode: a+x
+    owner: root
+    group: "{{ root_group }}"

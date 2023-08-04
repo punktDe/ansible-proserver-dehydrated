@@ -1,14 +1,14 @@
 ---
 - name: Create dummy certificate directory
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    mode: 0700
+    mode: "0700"
   with_items:
     - "{{ cert_prefix }}"
 
 - name: Copy dummy certificate and key
-  copy:
+  ansible.builtin.copy:
     content: "{{ item.content }}"
     dest: "{{ item.dest }}"
     force: no
