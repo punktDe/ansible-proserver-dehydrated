@@ -9,7 +9,7 @@
 
 - name: Run dehydrated
   changed_when: yes
-  ansible.builtin.command: 
+  ansible.builtin.shell: 
     cmd: "{{ dehydrated.command }}"
   when: dehydrated.domains and not dehydrated.disable_renewal
 
