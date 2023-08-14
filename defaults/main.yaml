@@ -39,7 +39,16 @@ dehydrated:
       /usr/local/bin/dehydrated --cron --keep-going --accept-terms >> /var/log/dehydrated.log 2>&1
     {%- endif -%}
   httpd_service:
-    name: nginx
+    name: >-
+      {%- if groups.apache is defined and inventory_hostname in groups.apache -%}
+        {%- if ansible_system == 'Linux' -%}
+          apache2
+        {%- else -%}
+          apache24
+        {%- endif -%}
+      {%- else -%}
+        nginx
+      {%- endif -%}
     state: reloaded
   hooks:
     deploy_challenge: {}

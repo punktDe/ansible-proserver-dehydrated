@@ -8,3 +8,4 @@ warn_list:
   - unnamed-task
   - command-instead-of-shell
   - no-handler
+  - jinja[spacing]
