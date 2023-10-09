@@ -1,2 +1,10 @@
 ---
 dependencies: []
+
+galaxy_info:
+  author: "Punkt.de"
+  license: ""
+  description: "Dehydrated role for Proserver"
+  role_name: "proserver_dehydrated"
+  namespace: "punktde"
+  min_ansible_version: "2.15"
