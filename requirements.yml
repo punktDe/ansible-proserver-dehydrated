@@ -6,3 +6,7 @@ collections:
     type: git
   - name: https://github.com/ansible-collections/ansible.posix
     type: git
+
+roles:
+  - name: nginx
+    src: https://github.com/punktDe/ansible-proserver-nginx

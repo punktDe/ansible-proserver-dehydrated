@@ -5,6 +5,10 @@
     GITHUB_ACTIONS: "maybe"
     ANSIBLE_HASH_BEHAVIOUR: merge
   tasks:
+    - name: Include ansible-proserver-nginx
+      ansible.builtin.include_role:
+        name: nginx
+
     - name: "Include ansible-proserver-dehydrated"
       ansible.builtin.include_role:
         name: "ansible-proserver-dehydrated"

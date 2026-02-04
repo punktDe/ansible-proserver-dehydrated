@@ -47,7 +47,7 @@ deploy_cert() {
     cat -- "$FULLCHAINFILE" "$KEYFILE" > "$FULLCHAINANDPRIVKEYFILE"
 
     {% if dehydrated.httpd_service.name %}
-    {% if ansible_system == 'Linux' %}
+    {% if ansible_facts['system'] == 'Linux' %}
     systemctl {{ dehydrated.httpd_service.state|regex_replace('^(reload|restart)ed$', '\\1')|quote }} {{ dehydrated.httpd_service.name|quote }}
     {% else %}
     /usr/sbin/service {{ dehydrated.httpd_service.name|quote }} {{ dehydrated.httpd_service.state|regex_replace('^(reload|restart)ed$', '\\1')|quote }}
@@ -101,7 +101,7 @@ generate_csr() {
 
 _get_cert_enddate() {
     local enddate="$(openssl x509 -in "$1" -enddate -noout | sed -E 's/^[^=]+=(.*)$/\1/')"
-    {% if ansible_system == 'Linux' %}
+    {% if ansible_facts['system'] == 'Linux' %}
     date -d "$enddate" +%s
     {% else %}
     date -j -f "%b %d %T %Y %Z" "$enddate" +%s

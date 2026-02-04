@@ -2,27 +2,27 @@
 dehydrated:
   prefix:
     bin: >-
-      {%- if ansible_system == 'Linux' -%}
+      {%- if ansible_facts['system'] == 'Linux' -%}
         /usr/bin
       {%- else -%}
         /usr/local/bin
       {%- endif -%}
     certs: >-
-      {%- if ansible_system == 'Linux' -%}
+      {%- if ansible_facts['system'] == 'Linux' -%}
         /var/lib/dehydrated/certs
       {%- else -%}
         /usr/local/etc/ssl/certs
       {%- endif -%}
     config: >-
-      {%- if ansible_system == 'Linux' -%}
+      {%- if ansible_facts['system'] == 'Linux' -%}
         /etc/dehydrated
       {%- else -%}
         /usr/local/etc/dehydrated
       {%- endif -%}
   config:
     CA: https://acme-v02.api.letsencrypt.org/directory
-    WELLKNOWN: "{{ '/var/lib/dehydrated/acme-challenges' if ansible_system == 'Linux' else '/var/www/letsencrypt' }}"
-    HOOK: "{{ '/etc/dehydrated/hook.sh' if ansible_system == 'Linux' else '/usr/local/etc/dehydrated/hook.sh' }}"
+    WELLKNOWN: "{{ '/var/lib/dehydrated/acme-challenges' if ansible_facts['system'] == 'Linux' else '/var/www/letsencrypt' }}"
+    HOOK: "{{ '/etc/dehydrated/hook.sh' if ansible_facts['system'] == 'Linux' else '/usr/local/etc/dehydrated/hook.sh' }}"
   acme_dns: {}
   #
   # acme_cache:
@@ -33,7 +33,7 @@ dehydrated:
   #     ### NOTE: this has to be the user's private key, so it should be newly generated per project
   acme_cache: {}
   command: >-
-    {%- if ansible_system == 'Linux' -%}
+    {%- if ansible_facts['system'] == 'Linux' -%}
       systemctl start dehydrated
     {%- else -%}
       /usr/local/bin/dehydrated --cron --keep-going --accept-terms >> /var/log/dehydrated.log 2>&1
@@ -41,7 +41,7 @@ dehydrated:
   httpd_service:
     name: >-
       {%- if groups.apache is defined and inventory_hostname in groups.apache -%}
-        {%- if ansible_system == 'Linux' -%}
+        {%- if ansible_facts['system'] == 'Linux' -%}
           apache2
         {%- else -%}
           apache24
