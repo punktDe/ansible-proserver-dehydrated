@@ -1,10 +1,8 @@
 ---
 - name: Reload httpd service (and dehydrated certificates) before running dehydrated
   ansible.builtin.service:
-    name: "{{ item.name }}"
-    state: "{{ item.state }}"
-  with_items:
-    - "{{ dehydrated.httpd_service }}"
+    name: "{{ dehydrated.httpd_service.name }}"
+    state: "{{ dehydrated.httpd_service.state }}"
   when: dehydrated.domains | length > 0 and dehydrated.httpd_service.name is defined
 
 - name: Run dehydrated
@@ -15,8 +13,6 @@
 
 - name: Reload httpd service (and dehydrated certificates) after running dehydrated
   ansible.builtin.service:
-    name: "{{ item.name }}"
-    state: "{{ item.state }}"
-  with_items:
-    - "{{ dehydrated.httpd_service }}"
+    name: "{{ dehydrated.httpd_service.name }}"
+    state: "{{ dehydrated.httpd_service.state }}"
   when: dehydrated.domains | length > 0 and dehydrated.httpd_service.name is defined

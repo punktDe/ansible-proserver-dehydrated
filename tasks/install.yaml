@@ -30,10 +30,8 @@
     group: "{{ root_group }}"
 
 - name: Enable and start dehydrated systemd timer
-  loop:
-    - dehydrated.timer
   ansible.builtin.systemd:
     daemon_reload: yes
-    name: "{{ item }}"
+    name: dehydrated.timer
     enabled: yes
     state: started

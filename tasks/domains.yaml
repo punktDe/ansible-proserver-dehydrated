@@ -5,18 +5,16 @@
     loop_var: cert_name
   vars:
     cert_prefix: "{{ dehydrated.prefix.certs }}/{{ cert_name }}"
-  with_items: "{{ dehydrated.domains.keys() | list }}"
+  loop: "{{ dehydrated.domains.keys() | list }}"
   when: dehydrated.provide_dummy_cert
 
 - name: Template domains file
   ansible.builtin.template:
     src: domains.txt
-    dest: "{{ item }}"
+    dest: "{{ dehydrated.prefix.config }}/domains.txt"
     owner: root
     group: "{{ root_group }}"
     mode: "0755"
-  with_items:
-    - "{{ dehydrated.prefix.config }}/domains.txt"
   notify:
     - Reload httpd service (and dehydrated certificates) before running dehydrated
     - Run dehydrated
