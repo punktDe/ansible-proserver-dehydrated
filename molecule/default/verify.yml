@@ -1,6 +1,4 @@
 ---
-# This is an example playbook to execute Ansible tests.
-
 - name: Verify
   hosts: all
   gather_facts: false
@@ -10,7 +8,7 @@
       register: dehydrated_version
       changed_when: no
       ansible.builtin.command:
-        cmd: dehydrated --version 
+        cmd: dehydrated --version
 
     - name: Show dehydrated version
       ansible.builtin.debug:

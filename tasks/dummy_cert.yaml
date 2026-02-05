@@ -1,11 +1,9 @@
 ---
 - name: Create dummy certificate directory
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ cert_prefix }}"
     state: directory
     mode: "0700"
-  with_items:
-    - "{{ cert_prefix }}"
 
 - name: Copy dummy certificate and key
   ansible.builtin.copy:
@@ -15,7 +13,7 @@
     mode: 0600
   loop_control:
     label: "{{ item.dest }}"
-  with_items:
+  loop:
     - dest: "{{ cert_prefix }}/fullchain.pem"
       content: "{{ dehydrated.dummy_cert }}"
     - dest: "{{ cert_prefix }}/fullchainandprivkey.pem"
