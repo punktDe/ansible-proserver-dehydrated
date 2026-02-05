@@ -1,3 +1,4 @@
+---
 - name: Create directory for acme-cache configuration
   ansible.builtin.file:
     path: "{{ item }}"

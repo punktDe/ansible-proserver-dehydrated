@@ -34,14 +34,14 @@ Supports ACME-DNS and ACME-Cache for DNS-01 challenges
 |---|---|---|---|---|
 | `prefix` | Path prefixes for different components | dict of 'prefix' options | no |  |
 | `config` | Dehydrated configuration parameters | dict of 'config' options | no |  |
-| `domains` | Domains to request certificates for. Key is the Common Name, value is list of Subject Alternative Names. | dict | no | "{} Example: vpro0000.proserver.punkt.de: [] punkt.de: ['www.punkt.de', 'proserver.punkt.de']" |
+| `domains` | Domains to request certificates for. Key is the Common Name, value is list of Subject Alternative Names. Example: ``` vpro0000.proserver.punkt.de: [] punkt.de: ['www.punkt.de', 'proserver.punkt.de'] ``` | dict | no | "{}" |
 | `acme_dns` | ACME-DNS configuration for DNS-01 challenges. Maps domain names to acme-dns server configuration. | dict of 'acme_dns' options | no | {} |
 | `acme_cache` | ACME-Cache configuration for DNS-01 challenges. Maps domain names to acme-cache server configuration. | dict of 'acme_cache' options | no | {} |
-| `command` | Command to run dehydrated (cron job or systemd service). Should start the dehydrated certificate renewal process. | str | no | systemctl start dehydrated (Linux) or custom cron (other) |
+| `command` | Command to run dehydrated (cron job or systemd service). Should start the dehydrated certificate renewal process. | str | no | systemctl start dehydrated (Linux) or custom cron (FreeBSD Proserver) |
 | `httpd_service` | HTTP service configuration for certificate deployment | dict of 'httpd_service' options | no |  |
 | `hooks` | Custom hook scripts for certificate lifecycle events | dict of 'hooks' options | no | Empty dict with all hook types |
 | `systemd` | Systemd timer configuration | dict of 'systemd' options | no |  |
-| `disable_renewal` | Disable automatic certificate renewal | bool | no | no |
+| `disable_renewal` | Disable automatic certificate renewal for all domains | bool | no | no |
 | `do_not_renew` | Domains to exclude from renewal | dict | no | "{}" |
 | `provide_dummy_cert` | Provide dummy self-signed certificates initially | bool | no | yes |
 | `dummy_cert` | PEM-encoded self-signed certificate content (for initial use before ACME issuance) | str | no | Built-in self-signed certificate |
@@ -51,17 +51,17 @@ Supports ACME-DNS and ACME-Cache for DNS-01 challenges
 
 |Option|Description|Type|Required|Default|
 |---|---|---|---|---|
-| `bin` | Path to dehydrated binary directory | str | no | /usr/bin (Linux) or /usr/local/bin (other) |
-| `certs` | Path to store certificates | str | no | /var/lib/dehydrated/certs (Linux) or /usr/local/etc/ssl/certs (other) |
-| `config` | Path to dehydrated configuration directory | str | no | /etc/dehydrated (Linux) or /usr/local/etc/dehydrated (other) |
+| `bin` | Path to dehydrated binary directory | str | no | /usr/bin (Linux) or /usr/local/bin (FreeBSD Proserver) |
+| `certs` | Path to store certificates | str | no | /var/lib/dehydrated/certs (Linux) or /usr/local/etc/ssl/certs (FreeBSD Proserver) |
+| `config` | Path to dehydrated configuration directory | str | no | /etc/dehydrated (Linux) or /usr/local/etc/dehydrated (FreeBSD Proserver) |
 
 #### Options for `dehydrated.config`
 
 |Option|Description|Type|Required|Default|
 |---|---|---|---|---|
 | `CA` | ACME server directory URL | str | no | https://acme-v02.api.letsencrypt.org/directory |
-| `WELLKNOWN` | Path to ACME challenge directory (http-01) | str | no | /var/lib/dehydrated/acme-challenges (Linux) or /var/www/letsencrypt (other) |
-| `HOOK` | Path to dehydrated hook script | str | no | /etc/dehydrated/hook.sh (Linux) or /usr/local/etc/dehydrated/hook.sh (other) |
+| `WELLKNOWN` | Path to ACME challenge directory (http-01) | str | no | /var/lib/dehydrated/acme-challenges (Linux) or /var/www/letsencrypt (FreeBSD Proserver) |
+| `HOOK` | Path to dehydrated hook script | str | no | /etc/dehydrated/hook.sh (Linux) or /usr/local/etc/dehydrated/hook.sh (FreeBSD Proserver) |
 
 #### Options for `dehydrated.acme_dns`
 
@@ -93,7 +93,7 @@ Supports ACME-DNS and ACME-Cache for DNS-01 challenges
 
 |Option|Description|Type|Required|Default|
 |---|---|---|---|---|
-| `name` | Name of HTTP service to reload after certificate update. Automatically determined based on ansible_system and group membership. | str | no | apache2 (Linux+Apache), apache24 (BSD+Apache), nginx (other) |
+| `name` | Name of HTTP service to reload after certificate update. Automatically determined based on ansible_facts['system'] and group membership. | str | no | apache2 (Linux+Apache), apache24 (BSD+Apache), nginx (other) |
 | `state` | State action for HTTP service after certificate update | str | no | reloaded |
 
 #### Options for `dehydrated.hooks`

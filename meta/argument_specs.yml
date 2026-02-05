@@ -20,15 +20,15 @@ argument_specs:
               bin:
                 type: str
                 description: Path to dehydrated binary directory
-                default: "/usr/bin (Linux) or /usr/local/bin (other)"
+                default: "/usr/bin (Linux) or /usr/local/bin (FreeBSD Proserver)"
               certs:
                 type: str
                 description: Path to store certificates
-                default: "/var/lib/dehydrated/certs (Linux) or /usr/local/etc/ssl/certs (other)"
+                default: "/var/lib/dehydrated/certs (Linux) or /usr/local/etc/ssl/certs (FreeBSD Proserver)"
               config:
                 type: str
                 description: Path to dehydrated configuration directory
-                default: "/etc/dehydrated (Linux) or /usr/local/etc/dehydrated (other)"
+                default: "/etc/dehydrated (Linux) or /usr/local/etc/dehydrated (FreeBSD Proserver)"
           config:
             type: dict
             description: Dehydrated configuration parameters
@@ -40,20 +40,22 @@ argument_specs:
               WELLKNOWN:
                 type: str
                 description: Path to ACME challenge directory (http-01)
-                default: "/var/lib/dehydrated/acme-challenges (Linux) or /var/www/letsencrypt (other)"
+                default: "/var/lib/dehydrated/acme-challenges (Linux) or /var/www/letsencrypt (FreeBSD Proserver)"
               HOOK:
                 type: str
                 description: Path to dehydrated hook script
-                default: "/etc/dehydrated/hook.sh (Linux) or /usr/local/etc/dehydrated/hook.sh (other)"
+                default: "/etc/dehydrated/hook.sh (Linux) or /usr/local/etc/dehydrated/hook.sh (FreeBSD Proserver)"
           domains:
             type: dict
             description: |
               Domains to request certificates for.
               Key is the Common Name, value is list of Subject Alternative Names.
-            default: "{}
               Example:
+              ```
               vpro0000.proserver.punkt.de: []
-              punkt.de: ['www.punkt.de', 'proserver.punkt.de']"
+              punkt.de: ['www.punkt.de', 'proserver.punkt.de']
+              ```
+            default: "{}"
           acme_dns:
             type: dict
             description: |
@@ -93,7 +95,7 @@ argument_specs:
             description: |
               Command to run dehydrated (cron job or systemd service).
               Should start the dehydrated certificate renewal process.
-            default: "systemctl start dehydrated (Linux) or custom cron (other)"
+            default: "systemctl start dehydrated (Linux) or custom cron (FreeBSD Proserver)"
           httpd_service:
             type: dict
             description: HTTP service configuration for certificate deployment
@@ -102,7 +104,7 @@ argument_specs:
                 type: str
                 description: |
                   Name of HTTP service to reload after certificate update.
-                  Automatically determined based on ansible_system and group membership.
+                  Automatically determined based on ansible_facts['system'] and group membership.
                 default: "apache2 (Linux+Apache), apache24 (BSD+Apache), nginx (other)"
               state:
                 type: str
@@ -167,7 +169,7 @@ argument_specs:
                 default: "*-*-* 00:00:00 with RandomizedDelaySec=6h"
           disable_renewal:
             type: bool
-            description: Disable automatic certificate renewal
+            description: Disable automatic certificate renewal for all domains
             default: no
           do_not_renew:
             type: dict
