@@ -5,13 +5,82 @@
   hosts: all
   gather_facts: false
   tasks:
-    - name: Check that dehydrated is installed
-      become: yes
-      register: dehydrated_version
-      changed_when: no
-      ansible.builtin.command:
-        cmd: dehydrated --version 
+    - name: Gather minimal facts (including service manager)
+      ansible.builtin.setup:
+        gather_subset:
+          - '!all'
+          - 'min'
 
-    - name: Show dehydrated version
-      ansible.builtin.debug:
-        var: dehydrated_version.stdout
+    - name: Check dehydrated version
+      ansible.builtin.command:
+        cmd: dehydrated --version
+      register: dehydrated_version
+      changed_when: false
+      failed_when: dehydrated_version.rc != 0
+
+    - name: Assert dehydrated is installed
+      ansible.builtin.assert:
+        that:
+          - "'dehydrated' in (dehydrated_version.stdout | lower)"
+        fail_msg: "Dehydrated binary is not working as expected"
+
+    - name: Verify dehydrated timer is active and enabled
+      ansible.builtin.systemd:
+        name: dehydrated.timer
+      register: dehydrated_timer
+      when: ansible_facts['service_mgr'] == 'systemd'
+
+    - name: Assert dehydrated timer is active and enabled
+      ansible.builtin.assert:
+        that:
+          - dehydrated_timer.status['ActiveState'] == 'active'
+          - dehydrated_timer.status['UnitFileState'] == 'enabled'
+        fail_msg: "Dehydrated timer is not running or enabled"
+      when: ansible_facts['service_mgr'] == 'systemd'
+
+    - name: Check configuration directory
+      ansible.builtin.stat:
+        path: /etc/dehydrated
+      register: config_dir
+
+    - name: Assert configuration directory exists
+      ansible.builtin.assert:
+        that:
+          - config_dir.stat.exists
+          - config_dir.stat.isdir
+        fail_msg: "/etc/dehydrated configuration directory is missing"
+
+    - name: Check config file
+      ansible.builtin.stat:
+        path: /etc/dehydrated/config
+      register: config_file
+
+    - name: Assert config file exists
+      ansible.builtin.assert:
+        that:
+          - config_file.stat.exists
+        fail_msg: "/etc/dehydrated/config file is missing"
+
+    - name: Check hook script
+      ansible.builtin.stat:
+        path: /etc/dehydrated/hook.sh
+      register: hook_script
+
+    - name: Assert hook script exists and is executable
+      ansible.builtin.assert:
+        that:
+          - hook_script.stat.exists
+          - hook_script.stat.executable
+        fail_msg: "/etc/dehydrated/hook.sh is missing or not executable"
+
+    - name: Check WELLKNOWN directory
+      ansible.builtin.stat:
+        path: /var/lib/dehydrated/acme-challenges
+      register: wellknown_dir
+
+    - name: Assert WELLKNOWN directory exists
+      ansible.builtin.assert:
+        that:
+          - wellknown_dir.stat.exists
+          - wellknown_dir.stat.isdir
+        fail_msg: "WELLKNOWN directory (/var/lib/dehydrated/acme-challenges) is missing"
