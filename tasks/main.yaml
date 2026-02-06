@@ -4,14 +4,14 @@
   vars:
     params:
       files:
-        - '{{ ansible_distribution }}.yml'
-        - '{{ ansible_os_family }}.yml'
+        - "{{ ansible_facts['distribution'] }}.yml"
+        - "{{ ansible_facts['os_family'] }}.yml"
         - main.yml
       paths:
-        - 'vars'
+        - "vars"
 
 - name: Install dehydrated
-  when: ansible_system == 'Linux'
+  when: ansible_facts['system'] == 'Linux'
   ansible.builtin.include_tasks: install.yaml
 
 - name: Configure dehydrated
@@ -19,7 +19,6 @@
 
 - name: Configure domain certs
   ansible.builtin.include_tasks: domains.yaml
-
 
 - name: Configure acme-dns
   ansible.builtin.include_tasks: acme-dns.yaml

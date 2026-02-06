@@ -1,6 +1,4 @@
 ---
-# This is an example playbook to execute Ansible tests.
-
 - name: Verify
   hosts: all
   gather_facts: false
@@ -14,6 +12,7 @@
     - name: Check dehydrated version
       ansible.builtin.command:
         cmd: dehydrated --version
+<<<<<<< improve-verify-step
       register: dehydrated_version
       changed_when: false
       failed_when: dehydrated_version.rc != 0
@@ -77,6 +76,8 @@
       ansible.builtin.stat:
         path: /var/lib/dehydrated/acme-challenges
       register: wellknown_dir
+=======
+>>>>>>> master
 
     - name: Assert WELLKNOWN directory exists
       ansible.builtin.assert:

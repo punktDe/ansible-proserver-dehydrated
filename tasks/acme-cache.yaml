@@ -1,12 +1,11 @@
+---
 - name: Create directory for acme-cache configuration
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ dehydrated.prefix.config }}/acme-cache"
     state: directory
     mode: "0700"
     owner: root
     group: "{{ root_group }}"
-  with_items:
-    - "{{ dehydrated.prefix.config }}/acme-cache"
 
 - name: Template acme-cache configuration
   ansible.builtin.copy:
