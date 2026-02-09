@@ -104,7 +104,11 @@ argument_specs:
                 type: str
                 description: |
                   Name of HTTP service to reload after certificate update.
+<<<<<<< HEAD
+                  Automatically determined based on ansible_system and group membership.
+=======
                   Automatically determined based on ansible_facts['system'] and group membership.
+>>>>>>> master
                 default: "apache2 (Linux+Apache), apache24 (BSD+Apache), nginx (other)"
               state:
                 type: str
