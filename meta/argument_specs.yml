@@ -1,0 +1,190 @@
+---
+argument_specs:
+  main:
+    short_description: Configure dehydrated (ACME client) on a proServer
+    description:
+      - Configures dehydrated ACME client for automatic SSL certificate management
+      - Supports Let's Encrypt and other ACME-compatible CAs
+      - Handles domain certificate generation and renewal
+      - Supports ACME-DNS and ACME-Cache for DNS-01 challenges
+    options:
+      dehydrated:
+        type: dict
+        required: yes
+        description: Main dehydrated configuration object
+        options:
+          prefix:
+            type: dict
+            description: Path prefixes for different components
+            options:
+              bin:
+                type: str
+                description: Path to dehydrated binary directory
+                default: "/usr/bin (Linux) or /usr/local/bin (FreeBSD Proserver)"
+              certs:
+                type: str
+                description: Path to store certificates
+                default: "/var/lib/dehydrated/certs (Linux) or /usr/local/etc/ssl/certs (FreeBSD Proserver)"
+              config:
+                type: str
+                description: Path to dehydrated configuration directory
+                default: "/etc/dehydrated (Linux) or /usr/local/etc/dehydrated (FreeBSD Proserver)"
+          config:
+            type: dict
+            description: Dehydrated configuration parameters
+            options:
+              CA:
+                type: str
+                description: ACME server directory URL
+                default: "https://acme-v02.api.letsencrypt.org/directory"
+              WELLKNOWN:
+                type: str
+                description: Path to ACME challenge directory (http-01)
+                default: "/var/lib/dehydrated/acme-challenges (Linux) or /var/www/letsencrypt (FreeBSD Proserver)"
+              HOOK:
+                type: str
+                description: Path to dehydrated hook script
+                default: "/etc/dehydrated/hook.sh (Linux) or /usr/local/etc/dehydrated/hook.sh (FreeBSD Proserver)"
+          domains:
+            type: dict
+            description: |
+              Domains to request certificates for.
+              Key is the Common Name, value is list of Subject Alternative Names.
+
+              Example:
+              {{
+              vpro0000.proserver.punkt.de: []
+              punkt.de: ['www.punkt.de', 'proserver.punkt.de']
+              }}
+            default: "{}"
+          acme_dns:
+            type: dict
+            description: |
+              ACME-DNS configuration for DNS-01 challenges.
+              Maps domain names to acme-dns server configuration.
+            default: "{}"
+            options:
+              "<domain_name>":
+                type: dict
+                description: Configuration for specific domain
+                options:
+                  host:
+                    type: str
+                    description: ACME-DNS server hostname
+                  public_key:
+                    type: str
+                    description: Public SSH host key of ACME-DNS server
+          acme_cache:
+            type: dict
+            description: |
+              ACME-Cache configuration for DNS-01 challenges.
+              Maps domain names to acme-cache server configuration.
+            default: "{}"
+            options:
+              "<domain_name>":
+                type: dict
+                description: Configuration for specific domain
+                options:
+                  host:
+                    type: str
+                    description: ACME-Cache server hostname
+                  public_key:
+                    type: str
+                    description: Public SSH host key of ACME-Cache server
+          command:
+            type: str
+            description: |
+              Command to run dehydrated (cron job or systemd service).
+              Should start the dehydrated certificate renewal process.
+            default: "systemctl start dehydrated (Linux) or custom cron (FreeBSD Proserver)"
+          httpd_service:
+            type: dict
+            description: HTTP service configuration for certificate deployment
+            options:
+              name:
+                type: str
+                description: |
+                  Name of HTTP service to reload after certificate update.
+                  Automatically determined based on ansible_system and group membership.
+                default: "apache2 (Linux+Apache), apache24 (BSD+Apache), nginx (other)"
+              state:
+                type: str
+                description: State action for HTTP service after certificate update
+                default: "reloaded"
+          hooks:
+            type: dict
+            description: Custom hook scripts for certificate lifecycle events
+            default: "Empty dict with all hook types"
+            options:
+              deploy_challenge:
+                type: dict
+                description: Scripts to run when deploying challenge
+                default: "{}"
+              clean_challenge:
+                type: dict
+                description: Scripts to run when cleaning challenge
+                default: "{}"
+              sync_cert:
+                type: dict
+                description: Scripts to run when syncing certificate
+                default: "{}"
+              deploy_cert:
+                type: dict
+                description: Scripts to run when deploying certificate
+                default: "{}"
+              deploy_ocsp:
+                type: dict
+                description: Scripts to run when deploying OCSP response
+                default: "{}"
+              unchanged_cert:
+                type: dict
+                description: Scripts to run when certificate is unchanged
+                default: "{}"
+              invalid_challenge:
+                type: dict
+                description: Scripts to run on invalid challenge
+                default: "{}"
+              request_failure:
+                type: dict
+                description: Scripts to run on request failure
+                default: "{}"
+              generate_csr:
+                type: dict
+                description: Scripts to run when generating CSR
+                default: "{}"
+              startup:
+                type: dict
+                description: Scripts to run on startup
+                default: "{}"
+              exit:
+                type: dict
+                description: Scripts to run on exit
+                default: "{}"
+          systemd:
+            type: dict
+            description: Systemd timer configuration
+            options:
+              timer:
+                type: str
+                description: Systemd OnCalendar specification for certificate renewal
+                default: "*-*-* 00:00:00 with RandomizedDelaySec=6h"
+          disable_renewal:
+            type: bool
+            description: Disable automatic certificate renewal for all domains
+            default: no
+          do_not_renew:
+            type: dict
+            description: Domains to exclude from renewal
+            default: "{}"
+          provide_dummy_cert:
+            type: bool
+            description: Provide dummy self-signed certificates initially
+            default: yes
+          dummy_cert:
+            type: str
+            description: PEM-encoded self-signed certificate content (for initial use before ACME issuance)
+            default: "Built-in self-signed certificate"
+          dummy_key:
+            type: str
+            description: PEM-encoded private key for dummy certificate
+            default: "Built-in private key"
