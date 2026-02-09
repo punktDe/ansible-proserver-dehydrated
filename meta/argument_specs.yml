@@ -50,12 +50,11 @@ argument_specs:
             description: |
               Domains to request certificates for.
               Key is the Common Name, value is list of Subject Alternative Names.
-
               Example:
-              {{
+              ```
               vpro0000.proserver.punkt.de: []
               punkt.de: ['www.punkt.de', 'proserver.punkt.de']
-              }}
+              ```
             default: "{}"
           acme_dns:
             type: dict
@@ -105,7 +104,11 @@ argument_specs:
                 type: str
                 description: |
                   Name of HTTP service to reload after certificate update.
+<<<<<<< HEAD
                   Automatically determined based on ansible_system and group membership.
+=======
+                  Automatically determined based on ansible_facts['system'] and group membership.
+>>>>>>> master
                 default: "apache2 (Linux+Apache), apache24 (BSD+Apache), nginx (other)"
               state:
                 type: str

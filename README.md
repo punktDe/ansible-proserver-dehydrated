@@ -34,7 +34,7 @@ Supports ACME-DNS and ACME-Cache for DNS-01 challenges
 |---|---|---|---|---|
 | `prefix` | Path prefixes for different components | dict of 'prefix' options | no |  |
 | `config` | Dehydrated configuration parameters | dict of 'config' options | no |  |
-| `domains` | Domains to request certificates for. Key is the Common Name, value is list of Subject Alternative Names.  Example: {{ vpro0000.proserver.punkt.de: [] punkt.de: ['www.punkt.de', 'proserver.punkt.de'] }} | dict | no | "{}" |
+| `domains` | Domains to request certificates for. Key is the Common Name, value is list of Subject Alternative Names. Example: ``` vpro0000.proserver.punkt.de: [] punkt.de: ['www.punkt.de', 'proserver.punkt.de'] ``` | dict | no | "{}" |
 | `acme_dns` | ACME-DNS configuration for DNS-01 challenges. Maps domain names to acme-dns server configuration. | dict of 'acme_dns' options | no | {} |
 | `acme_cache` | ACME-Cache configuration for DNS-01 challenges. Maps domain names to acme-cache server configuration. | dict of 'acme_cache' options | no | {} |
 | `command` | Command to run dehydrated (cron job or systemd service). Should start the dehydrated certificate renewal process. | str | no | systemctl start dehydrated (Linux) or custom cron (FreeBSD Proserver) |
@@ -93,7 +93,7 @@ Supports ACME-DNS and ACME-Cache for DNS-01 challenges
 
 |Option|Description|Type|Required|Default|
 |---|---|---|---|---|
-| `name` | Name of HTTP service to reload after certificate update. Automatically determined based on ansible_system and group membership. | str | no | apache2 (Linux+Apache), apache24 (BSD+Apache), nginx (other) |
+| `name` | Name of HTTP service to reload after certificate update. Automatically determined based on ansible_facts['system'] and group membership. | str | no | apache2 (Linux+Apache), apache24 (BSD+Apache), nginx (other) |
 | `state` | State action for HTTP service after certificate update | str | no | reloaded |
 
 #### Options for `dehydrated.hooks`
