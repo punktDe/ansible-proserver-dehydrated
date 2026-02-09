@@ -1,0 +1,49 @@
+---
+name: Generate README.md for the role
+
+on:
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - '**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  readme:
+    name: Generate README.md from argument specs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Install dependencies
+        run: |
+          uv -q venv --allow-existing --seed .venv
+          . .venv/bin/activate
+          uv -q pip install -r requirements.txt
+
+      - name: Run aar-doc
+        run: |
+          . .venv/bin/activate
+          aar-doc --output-mode replace --config-file .aar-doc.yml . markdown
+
+      - name: Output diff
+        run: git diff README.md
+
+      - name: Commit and push README
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add README.md
+          git diff-index --quiet HEAD || git commit -m "chore: Generate README.md"
+          git push

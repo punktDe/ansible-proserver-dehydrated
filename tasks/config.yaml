@@ -14,10 +14,8 @@
 - name: Template dehydrated hook
   ansible.builtin.template:
     src: hook.sh
-    dest: "{{ item }}"
+    dest: "{{ dehydrated.prefix.config }}/hook.sh"
     mode: "+x"
-  with_items:
-    - "{{ dehydrated.prefix.config }}/hook.sh"
 
 - name: Create the WELLKNOWN directory
   ansible.builtin.file:
