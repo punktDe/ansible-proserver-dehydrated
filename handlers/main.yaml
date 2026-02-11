@@ -6,8 +6,10 @@
   when: dehydrated.domains | length > 0 and dehydrated.httpd_service.name is defined
 
 - name: Run dehydrated
+  # We need shell here because of >> redirection in the FreeBSD command
+  # noqa: command-instead-of-shell
   changed_when: yes
-  ansible.builtin.command:
+  ansible.builtin.shell:
     cmd: "{{ dehydrated.command }}"
   when: dehydrated.domains | length > 0 and not dehydrated.disable_renewal
 
