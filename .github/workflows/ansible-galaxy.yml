@@ -1,0 +1,10 @@
+---
+name: ansible-galaxy
+run-name: Publish on Ansible Galaxy
+"on":
+  push:
+    tags:
+      - "*"
+jobs:
+  ansible-galaxy:
+    uses: punktDe/shared-workflows/.github/workflows/ansible-galaxy-publish.yml@main
