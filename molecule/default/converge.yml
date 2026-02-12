@@ -1,10 +1,17 @@
 ---
 - name: Converge
   hosts: all
+  vars:
+    dehydrated:
+      domains:
+        example.com: ["www.domains.com"]
+      do_not_renew:
+        example.com: true
   environment:
     GITHUB_ACTIONS: "maybe"
     ANSIBLE_HASH_BEHAVIOUR: merge
   tasks:
-    - name: "Include ansible-proserver-dehydrated"
+    # Nginx pulls dehydrated as a dependency
+    - name: Include ansible-proserver-nginx
       ansible.builtin.include_role:
-        name: "ansible-proserver-dehydrated"
+        name: nginx
