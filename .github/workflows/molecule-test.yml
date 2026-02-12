@@ -6,4 +6,4 @@ on:
   workflow_dispatch:
 jobs:
   molecule-test:
-    uses: punktDe/shared-workflows/.github/workflows/molecule-test.yml@role-copy
+    uses: punktDe/shared-workflows/.github/workflows/molecule-test.yml@main
