@@ -1,9 +1,0 @@
----
-name: ansible-lint
-run-name: Ansible Lint on the role
-on:
-  push:
-  workflow_dispatch:
-jobs:
-  ansible-lint:
-    uses: punktDe/shared-workflows/.github/workflows/ansible-lint.yml@main
