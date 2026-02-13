@@ -7,4 +7,9 @@ run-name: Publish on Ansible Galaxy
       - "*"
 jobs:
   ansible-galaxy:
+    needs:
+      - ansible-lint
+      - molecule-test
     uses: punktDe/shared-workflows/.github/workflows/ansible-galaxy-publish.yml@main
+    secrets:
+      galaxy_api_key: ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
