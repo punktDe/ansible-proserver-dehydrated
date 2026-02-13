@@ -1,6 +1,5 @@
 ---
 name: CI
-run-name: Ansible Lint on the role
 on:
   push:
   workflow_dispatch:
