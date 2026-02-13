@@ -1,9 +1,0 @@
----
-name: Molecule Tests
-run-name: Run molecule tests on the role
-on:
-  push:
-  workflow_dispatch:
-jobs:
-  molecule-test:
-    uses: punktDe/shared-workflows/.github/workflows/molecule-test.yml@main

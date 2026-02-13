@@ -1,0 +1,11 @@
+---
+name: CI
+run-name: Ansible Lint on the role
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  ansible-role:
+    uses: punktDe/shared-workflows/.github/workflows/ansible-role.yml@refactor
+    secrets:
+      galaxy_api_key: ${{ secrets.GALAXY_API_KEY }}
