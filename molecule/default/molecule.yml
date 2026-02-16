@@ -24,6 +24,8 @@ platforms:
     <<: *default_platform
 provisioner:
   name: ansible
+  env:
+    ANSIBLE_ROLES_PATH: ../../roles:../../../:~/.ansible/roles
   playbooks:
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}
 verifier:
