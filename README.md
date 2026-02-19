@@ -35,8 +35,8 @@ Supports ACME-DNS and ACME-Cache for DNS-01 challenges
 | `prefix` | Path prefixes for different components | dict of 'prefix' options | no |  |
 | `config` | Dehydrated configuration parameters | dict of 'config' options | no |  |
 | `domains` | Domains to request certificates for. Key is the Common Name, value is list of Subject Alternative Names. Example: ``` vpro0000.proserver.punkt.de: [] punkt.de: ['www.punkt.de', 'proserver.punkt.de'] ``` | dict | no | "{}" |
-| `acme_dns` | ACME-DNS configuration for DNS-01 challenges. Maps domain names to acme-dns server configuration. | dict of 'acme_dns' options | no | {} |
-| `acme_cache` | ACME-Cache configuration for DNS-01 challenges. Maps domain names to acme-cache server configuration. | dict of 'acme_cache' options | no | {} |
+| `acme_dns` | ACME-DNS configuration for DNS-01 challenges. Maps domain names to acme-dns server configuration. | dict | no | "{}" |
+| `acme_cache` | ACME-Cache configuration for DNS-01 challenges. Maps domain names to acme-cache server configuration. | dict | no | "{}" |
 | `command` | Command to run dehydrated (cron job or systemd service). Should start the dehydrated certificate renewal process. | str | no | systemctl start dehydrated (Linux) or custom cron (FreeBSD Proserver) |
 | `httpd_service` | HTTP service configuration for certificate deployment | dict of 'httpd_service' options | no |  |
 | `hooks` | Custom hook scripts for certificate lifecycle events | dict of 'hooks' options | no | Empty dict with all hook types |
@@ -62,32 +62,6 @@ Supports ACME-DNS and ACME-Cache for DNS-01 challenges
 | `CA` | ACME server directory URL | str | no | https://acme-v02.api.letsencrypt.org/directory |
 | `WELLKNOWN` | Path to ACME challenge directory (http-01) | str | no | /var/lib/dehydrated/acme-challenges (Linux) or /var/www/letsencrypt (FreeBSD Proserver) |
 | `HOOK` | Path to dehydrated hook script | str | no | /etc/dehydrated/hook.sh (Linux) or /usr/local/etc/dehydrated/hook.sh (FreeBSD Proserver) |
-
-#### Options for `dehydrated.acme_dns`
-
-|Option|Description|Type|Required|Default|
-|---|---|---|---|---|
-| `<domain_name>` | Configuration for specific domain | dict of '<domain_name>' options | no |  |
-
-#### Options for `dehydrated.acme_dns.<domain_name>`
-
-|Option|Description|Type|Required|Default|
-|---|---|---|---|---|
-| `host` | ACME-DNS server hostname | str | no |  |
-| `public_key` | Public SSH host key of ACME-DNS server | str | no |  |
-
-#### Options for `dehydrated.acme_cache`
-
-|Option|Description|Type|Required|Default|
-|---|---|---|---|---|
-| `<domain_name>` | Configuration for specific domain | dict of '<domain_name>' options | no |  |
-
-#### Options for `dehydrated.acme_cache.<domain_name>`
-
-|Option|Description|Type|Required|Default|
-|---|---|---|---|---|
-| `host` | ACME-Cache server hostname | str | no |  |
-| `public_key` | Public SSH host key of ACME-Cache server | str | no |  |
 
 #### Options for `dehydrated.httpd_service`
 
