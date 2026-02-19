@@ -62,34 +62,12 @@ argument_specs:
               ACME-DNS configuration for DNS-01 challenges.
               Maps domain names to acme-dns server configuration.
             default: "{}"
-            options:
-              "<domain_name>":
-                type: dict
-                description: Configuration for specific domain
-                options:
-                  host:
-                    type: str
-                    description: ACME-DNS server hostname
-                  public_key:
-                    type: str
-                    description: Public SSH host key of ACME-DNS server
           acme_cache:
             type: dict
             description: |
               ACME-Cache configuration for DNS-01 challenges.
               Maps domain names to acme-cache server configuration.
             default: "{}"
-            options:
-              "<domain_name>":
-                type: dict
-                description: Configuration for specific domain
-                options:
-                  host:
-                    type: str
-                    description: ACME-Cache server hostname
-                  public_key:
-                    type: str
-                    description: Public SSH host key of ACME-Cache server
           command:
             type: str
             description: |
