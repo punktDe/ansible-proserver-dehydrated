@@ -32,19 +32,7 @@ argument_specs:
           config:
             type: dict
             description: Dehydrated configuration parameters
-            options:
-              CA:
-                type: str
-                description: ACME server directory URL
-                default: "https://acme-v02.api.letsencrypt.org/directory"
-              WELLKNOWN:
-                type: str
-                description: Path to ACME challenge directory (http-01)
-                default: "/var/lib/dehydrated/acme-challenges (Linux) or /var/www/letsencrypt (FreeBSD Proserver)"
-              HOOK:
-                type: str
-                description: Path to dehydrated hook script
-                default: "/etc/dehydrated/hook.sh (Linux) or /usr/local/etc/dehydrated/hook.sh (FreeBSD Proserver)"
+            default: "{}"
           domains:
             type: dict
             description: |
