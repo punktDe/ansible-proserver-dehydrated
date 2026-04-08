@@ -33,7 +33,7 @@ Supports ACME-DNS and ACME-Cache for DNS-01 challenges
 |Option|Description|Type|Required|Default|
 |---|---|---|---|---|
 | `prefix` | Path prefixes for different components | dict of 'prefix' options | no |  |
-| `config` | Dehydrated configuration parameters | dict of 'config' options | no |  |
+| `config` | Dehydrated configuration parameters | dict | no | "{}" |
 | `domains` | Domains to request certificates for. Key is the Common Name, value is list of Subject Alternative Names. Example: ``` vpro0000.proserver.punkt.de: [] punkt.de: ['www.punkt.de', 'proserver.punkt.de'] ``` | dict | no | "{}" |
 | `acme_dns` | ACME-DNS configuration for DNS-01 challenges. Maps domain names to acme-dns server configuration. | dict | no | "{}" |
 | `acme_cache` | ACME-Cache configuration for DNS-01 challenges. Maps domain names to acme-cache server configuration. | dict | no | "{}" |
@@ -54,14 +54,6 @@ Supports ACME-DNS and ACME-Cache for DNS-01 challenges
 | `bin` | Path to dehydrated binary directory | str | no | /usr/bin (Linux) or /usr/local/bin (FreeBSD Proserver) |
 | `certs` | Path to store certificates | str | no | /var/lib/dehydrated/certs (Linux) or /usr/local/etc/ssl/certs (FreeBSD Proserver) |
 | `config` | Path to dehydrated configuration directory | str | no | /etc/dehydrated (Linux) or /usr/local/etc/dehydrated (FreeBSD Proserver) |
-
-#### Options for `dehydrated.config`
-
-|Option|Description|Type|Required|Default|
-|---|---|---|---|---|
-| `CA` | ACME server directory URL | str | no | https://acme-v02.api.letsencrypt.org/directory |
-| `WELLKNOWN` | Path to ACME challenge directory (http-01) | str | no | /var/lib/dehydrated/acme-challenges (Linux) or /var/www/letsencrypt (FreeBSD Proserver) |
-| `HOOK` | Path to dehydrated hook script | str | no | /etc/dehydrated/hook.sh (Linux) or /usr/local/etc/dehydrated/hook.sh (FreeBSD Proserver) |
 
 #### Options for `dehydrated.httpd_service`
 
