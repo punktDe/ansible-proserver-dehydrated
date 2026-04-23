@@ -14,6 +14,7 @@ dehydrated role for Proserver
 
 - Debian 12
 - Ubuntu 24.04, 22.04
+- Ubuntu 26.04
 - FreeBSD [Proserver](https://infrastructure.punkt.de/de/produkte/proserver.html)
 
 ## Role Arguments
