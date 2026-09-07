@@ -29,6 +29,14 @@ argument_specs:
                 type: str
                 description: Path to dehydrated configuration directory
                 default: "/etc/dehydrated (Linux) or /usr/local/etc/dehydrated (FreeBSD Proserver)"
+              dummy:
+                type: str
+                description:
+                  - "Path holding the standalone dummy certificate written when
+                     `provide_default_dummy_cert` is true."
+                  - "Outside `certs` on purpose: `dehydrated --cleanup` archives certificate
+                     directories that are not listed in domains.txt."
+                default: "/etc/dehydrated/dummy (Linux) or /usr/local/etc/dehydrated/dummy (FreeBSD Proserver)"
           config:
             type: dict
             description: Dehydrated configuration parameters
@@ -144,6 +152,15 @@ argument_specs:
           provide_dummy_cert:
             type: bool
             description: Provide dummy self-signed certificates initially
+            default: yes
+          provide_default_dummy_cert:
+            type: bool
+            description:
+              - "Also write the dummy certificate to `prefix.dummy`, independently of any
+                 configured domain."
+              - "For server blocks that have to terminate TLS but must not present a real
+                 hostname's certificate -- an nginx catch-all, for instance. Kept outside
+                 `prefix.certs` so `dehydrated --cleanup` cannot archive it."
             default: yes
           dummy_cert:
             type: str

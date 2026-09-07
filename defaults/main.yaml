@@ -19,6 +19,15 @@ dehydrated:
       {%- else -%}
         /usr/local/etc/dehydrated
       {%- endif -%}
+    # Standalone dummy certificate, deliberately NOT under prefix.certs: that
+    # directory is dehydrated's own, and `dehydrated --cleanup` archives cert
+    # directories that are not listed in domains.txt.
+    dummy: >-
+      {%- if ansible_facts['system'] == 'Linux' -%}
+        /etc/dehydrated/dummy
+      {%- else -%}
+        /usr/local/etc/dehydrated/dummy
+      {%- endif -%}
   config:
     CA: https://acme-v02.api.letsencrypt.org/directory
     WELLKNOWN: "{{ '/var/lib/dehydrated/acme-challenges' if ansible_facts['system'] == 'Linux' else '/var/www/letsencrypt' }}"
@@ -69,6 +78,10 @@ dehydrated:
   disable_renewal: no
   do_not_renew: {}
   provide_dummy_cert: yes
+  # Write the dummy certificate to prefix.dummy as well, independently of any
+  # domain. Consumers that need a certificate for a server block which must not
+  # present a real hostname (an nginx catch-all, say) can point at it.
+  provide_default_dummy_cert: yes
   dummy_cert: |
     -----BEGIN CERTIFICATE-----
     MIIDBzCCAe+gAwIBAgIJAMo+xiYMqrwVMA0GCSqGSIb3DQEBBQUAMBoxGDAWBgNV

@@ -73,6 +73,23 @@
           - hook_script.stat.executable
         fail_msg: "{{ dehydrated.prefix.config }}/hook.sh is missing or not executable"
 
+    - name: Check the standalone dummy certificate
+      ansible.builtin.stat:
+        path: "{{ dehydrated.prefix.dummy }}/{{ item }}"
+      register: dummy_cert_files
+      loop:
+        - fullchain.pem
+        - privkey.pem
+
+    - name: Assert the standalone dummy certificate exists
+      ansible.builtin.assert:
+        that:
+          - item.stat.exists
+        fail_msg: "{{ dehydrated.prefix.dummy }}/{{ item.item }} is missing"
+      loop: "{{ dummy_cert_files.results }}"
+      loop_control:
+        label: "{{ dehydrated.prefix.dummy }}/{{ item.item }}"
+
     - name: Check WELLKNOWN directory
       ansible.builtin.stat:
         path: "{{ dehydrated.config.WELLKNOWN }}"

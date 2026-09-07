@@ -17,6 +17,12 @@
 - name: Configure dehydrated
   ansible.builtin.include_tasks: config.yaml
 
+- name: Provide the standalone dummy certificate
+  ansible.builtin.include_tasks: dummy_cert.yaml
+  vars:
+    cert_prefix: "{{ dehydrated.prefix.dummy }}"
+  when: dehydrated.provide_default_dummy_cert
+
 - name: Configure domain certs
   ansible.builtin.include_tasks: domains.yaml
 
