@@ -44,6 +44,7 @@ Supports ACME-DNS and ACME-Cache for DNS-01 challenges
 | `disable_renewal` | Disable automatic certificate renewal for all domains | bool | no | no |
 | `do_not_renew` | Domains to exclude from renewal | dict | no | "{}" |
 | `provide_dummy_cert` | Provide dummy self-signed certificates initially | bool | no | yes |
+| `provide_default_dummy_cert` | Also write the dummy certificate to `prefix.dummy`, independently of any configured domain. For server blocks that have to terminate TLS but must not present a real hostname's certificate -- an nginx catch-all, for instance. Kept outside `prefix.certs` so `dehydrated --cleanup` cannot archive it. | bool | no | yes |
 | `dummy_cert` | PEM-encoded self-signed certificate content (for initial use before ACME issuance) | str | no | Built-in self-signed certificate |
 | `dummy_key` | PEM-encoded private key for dummy certificate | str | no | Built-in private key |
 
@@ -54,6 +55,7 @@ Supports ACME-DNS and ACME-Cache for DNS-01 challenges
 | `bin` | Path to dehydrated binary directory | str | no | /usr/bin (Linux) or /usr/local/bin (FreeBSD Proserver) |
 | `certs` | Path to store certificates | str | no | /var/lib/dehydrated/certs (Linux) or /usr/local/etc/ssl/certs (FreeBSD Proserver) |
 | `config` | Path to dehydrated configuration directory | str | no | /etc/dehydrated (Linux) or /usr/local/etc/dehydrated (FreeBSD Proserver) |
+| `dummy` | Path holding the standalone dummy certificate written when `provide_default_dummy_cert` is true. Outside `certs` on purpose: `dehydrated --cleanup` archives certificate directories that are not listed in domains.txt. | str | no | /etc/dehydrated/dummy (Linux) or /usr/local/etc/dehydrated/dummy (FreeBSD Proserver) |
 
 #### Options for `dehydrated.httpd_service`
 
