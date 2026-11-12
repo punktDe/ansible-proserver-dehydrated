@@ -32,57 +32,57 @@ Supports ACME-DNS and ACME-Cache for DNS-01 challenges
 
 |Option|Description|Type|Required|Default|
 |---|---|---|---|---|
-| `prefix` | Path prefixes for different components | dict of 'prefix' options | no |  |
-| `config` | Dehydrated configuration parameters | dict | no | "{}" |
-| `domains` | Domains to request certificates for. Key is the Common Name, value is list of Subject Alternative Names. Example: ``` vpro0000.proserver.punkt.de: [] punkt.de: ['www.punkt.de', 'proserver.punkt.de'] ``` | dict | no | "{}" |
-| `acme_dns` | ACME-DNS configuration for DNS-01 challenges. Maps domain names to acme-dns server configuration. | dict | no | "{}" |
-| `acme_cache` | ACME-Cache configuration for DNS-01 challenges. Maps domain names to acme-cache server configuration. | dict | no | "{}" |
-| `command` | Command to run dehydrated (cron job or systemd service). Should start the dehydrated certificate renewal process. | str | no | systemctl start dehydrated (Linux) or custom cron (FreeBSD Proserver) |
-| `httpd_service` | HTTP service configuration for certificate deployment | dict of 'httpd_service' options | no |  |
-| `hooks` | Custom hook scripts for certificate lifecycle events | dict of 'hooks' options | no | Empty dict with all hook types |
-| `systemd` | Systemd timer configuration | dict of 'systemd' options | no |  |
-| `disable_renewal` | Disable automatic certificate renewal for all domains and stop the systemd timer | bool | no | no |
-| `do_not_renew` | Domains to exclude from renewal | dict | no | "{}" |
-| `provide_dummy_cert` | Provide dummy self-signed certificates initially | bool | no | yes |
-| `dummy_cert` | PEM-encoded self-signed certificate content (for initial use before ACME issuance) | str | no | Built-in self-signed certificate |
-| `dummy_key` | PEM-encoded private key for dummy certificate | str | no | Built-in private key |
+| `prefix` | Path prefixes for different components | dict of `prefix` [options](#options-for-main--dehydrated--prefix) | no |  |
+| `config` | Dehydrated configuration parameters | dict | no | `"{}"` |
+| `domains` | Domains to request certificates for. Key is the Common Name, value is list of Subject Alternative Names. Example: ``` vpro0000.proserver.punkt.de: [] punkt.de: ['www.punkt.de', 'proserver.punkt.de'] ``` | dict | no | `"{}"` |
+| `acme_dns` | ACME-DNS configuration for DNS-01 challenges. Maps domain names to acme-dns server configuration. | dict | no | `"{}"` |
+| `acme_cache` | ACME-Cache configuration for DNS-01 challenges. Maps domain names to acme-cache server configuration. | dict | no | `"{}"` |
+| `command` | Command to run dehydrated (cron job or systemd service). Should start the dehydrated certificate renewal process. | str | no | `systemctl start dehydrated (Linux) or custom cron (FreeBSD Proserver)` |
+| `httpd_service` | HTTP service configuration for certificate deployment | dict of `httpd_service` [options](#options-for-main--dehydrated--httpd_service) | no |  |
+| `hooks` | Custom hook scripts for certificate lifecycle events | dict of `hooks` [options](#options-for-main--dehydrated--hooks) | no | `Empty dict with all hook types` |
+| `systemd` | Systemd timer configuration | dict of `systemd` [options](#options-for-main--dehydrated--systemd) | no |  |
+| `disable_renewal` | Disable automatic certificate renewal for all domains and stop the systemd timer | bool | no | `no` |
+| `do_not_renew` | Domains to exclude from renewal | dict | no | `"{}"` |
+| `provide_dummy_cert` | Provide dummy self-signed certificates initially | bool | no | `yes` |
+| `dummy_cert` | PEM-encoded self-signed certificate content (for initial use before ACME issuance) | str | no | `Built-in self-signed certificate` |
+| `dummy_key` | PEM-encoded private key for dummy certificate | str | no | `Built-in private key` |
 
 #### Options for `dehydrated.prefix`
 
 |Option|Description|Type|Required|Default|
 |---|---|---|---|---|
-| `bin` | Path to dehydrated binary directory | str | no | /usr/bin (Linux) or /usr/local/bin (FreeBSD Proserver) |
-| `certs` | Path to store certificates | str | no | /var/lib/dehydrated/certs (Linux) or /usr/local/etc/ssl/certs (FreeBSD Proserver) |
-| `config` | Path to dehydrated configuration directory | str | no | /etc/dehydrated (Linux) or /usr/local/etc/dehydrated (FreeBSD Proserver) |
+| `bin` | Path to dehydrated binary directory | str | no | `/usr/bin (Linux) or /usr/local/bin (FreeBSD Proserver)` |
+| `certs` | Path to store certificates | str | no | `/var/lib/dehydrated/certs (Linux) or /usr/local/etc/ssl/certs (FreeBSD Proserver)` |
+| `config` | Path to dehydrated configuration directory | str | no | `/etc/dehydrated (Linux) or /usr/local/etc/dehydrated (FreeBSD Proserver)` |
 
 #### Options for `dehydrated.httpd_service`
 
 |Option|Description|Type|Required|Default|
 |---|---|---|---|---|
-| `name` | Name of HTTP service to reload after certificate update. Automatically determined based on ansible_facts['system'] and group membership. | str | no | apache2 (Linux+Apache), apache24 (BSD+Apache), nginx (other) |
-| `state` | State action for HTTP service after certificate update | str | no | reloaded |
+| `name` | Name of HTTP service to reload after certificate update. Automatically determined based on ansible_facts['system'] and group membership. | str | no | `apache2 (Linux+Apache), apache24 (BSD+Apache), nginx (other)` |
+| `state` | State action for HTTP service after certificate update | str | no | `reloaded` |
 
 #### Options for `dehydrated.hooks`
 
 |Option|Description|Type|Required|Default|
 |---|---|---|---|---|
-| `deploy_challenge` | Scripts to run when deploying challenge | dict | no | "{}" |
-| `clean_challenge` | Scripts to run when cleaning challenge | dict | no | "{}" |
-| `sync_cert` | Scripts to run when syncing certificate | dict | no | "{}" |
-| `deploy_cert` | Scripts to run when deploying certificate | dict | no | "{}" |
-| `deploy_ocsp` | Scripts to run when deploying OCSP response | dict | no | "{}" |
-| `unchanged_cert` | Scripts to run when certificate is unchanged | dict | no | "{}" |
-| `invalid_challenge` | Scripts to run on invalid challenge | dict | no | "{}" |
-| `request_failure` | Scripts to run on request failure | dict | no | "{}" |
-| `generate_csr` | Scripts to run when generating CSR | dict | no | "{}" |
-| `startup` | Scripts to run on startup | dict | no | "{}" |
-| `exit` | Scripts to run on exit | dict | no | "{}" |
+| `deploy_challenge` | Scripts to run when deploying challenge | dict | no | `"{}"` |
+| `clean_challenge` | Scripts to run when cleaning challenge | dict | no | `"{}"` |
+| `sync_cert` | Scripts to run when syncing certificate | dict | no | `"{}"` |
+| `deploy_cert` | Scripts to run when deploying certificate | dict | no | `"{}"` |
+| `deploy_ocsp` | Scripts to run when deploying OCSP response | dict | no | `"{}"` |
+| `unchanged_cert` | Scripts to run when certificate is unchanged | dict | no | `"{}"` |
+| `invalid_challenge` | Scripts to run on invalid challenge | dict | no | `"{}"` |
+| `request_failure` | Scripts to run on request failure | dict | no | `"{}"` |
+| `generate_csr` | Scripts to run when generating CSR | dict | no | `"{}"` |
+| `startup` | Scripts to run on startup | dict | no | `"{}"` |
+| `exit` | Scripts to run on exit | dict | no | `"{}"` |
 
 #### Options for `dehydrated.systemd`
 
 |Option|Description|Type|Required|Default|
 |---|---|---|---|---|
-| `timer` | Systemd OnCalendar specification for certificate renewal | str | no | *-*-* 00:00:00 with RandomizedDelaySec=6h |
+| `timer` | Systemd OnCalendar specification for certificate renewal | str | no | `*-*-* 00:00:00 with RandomizedDelaySec=6h` |
 
 ## Dependencies
 None.
