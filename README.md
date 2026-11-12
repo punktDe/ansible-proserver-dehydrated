@@ -41,7 +41,7 @@ Supports ACME-DNS and ACME-Cache for DNS-01 challenges
 | `httpd_service` | HTTP service configuration for certificate deployment | dict of 'httpd_service' options | no |  |
 | `hooks` | Custom hook scripts for certificate lifecycle events | dict of 'hooks' options | no | Empty dict with all hook types |
 | `systemd` | Systemd timer configuration | dict of 'systemd' options | no |  |
-| `disable_renewal` | Disable automatic certificate renewal for all domains | bool | no | no |
+| `disable_renewal` | Disable automatic certificate renewal for all domains and stop the systemd timer | bool | no | no |
 | `do_not_renew` | Domains to exclude from renewal | dict | no | "{}" |
 | `provide_dummy_cert` | Provide dummy self-signed certificates initially | bool | no | yes |
 | `dummy_cert` | PEM-encoded self-signed certificate content (for initial use before ACME issuance) | str | no | Built-in self-signed certificate |

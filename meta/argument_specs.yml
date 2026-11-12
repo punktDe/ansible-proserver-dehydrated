@@ -135,7 +135,7 @@ argument_specs:
                 default: "*-*-* 00:00:00 with RandomizedDelaySec=6h"
           disable_renewal:
             type: bool
-            description: Disable automatic certificate renewal for all domains
+            description: Disable automatic certificate renewal for all domains and stop the systemd timer
             default: no
           do_not_renew:
             type: dict
