@@ -29,9 +29,9 @@
     owner: root
     group: "{{ root_group }}"
 
-- name: Enable and start dehydrated systemd timer
+- name: Enable and start dehydrated systemd timer, or stop it when renewal is disabled
   ansible.builtin.systemd:
     daemon_reload: yes
     name: dehydrated.timer
-    enabled: yes
-    state: started
+    enabled: "{{ not dehydrated.disable_renewal }}"
+    state: "{{ 'stopped' if dehydrated.disable_renewal else 'started' }}"
